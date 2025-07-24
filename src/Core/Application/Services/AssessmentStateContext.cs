@@ -175,6 +175,9 @@ namespace Application.Services
             AddStatusHistoryEntryWithAudit(targetStatus, action, reason, localizedActionName,
                 userId, userRole, actionDetails, previousStatus, targetStatus, rejectionReason);
 
+            // Send notifications for state transitions
+            _ = Task.Run(() => SendStateTransitionNotifications(action, previousStatus, targetStatus));
+
             return true;
         }
 
@@ -396,6 +399,207 @@ namespace Application.Services
             };
 
             _assessment.StatusHistories.Add(statusHistory);
+        }
+
+        #endregion
+
+        #region Notification Methods
+
+        /// <summary>
+        /// Sends notifications for state transitions based on action type
+        /// Follows the exact same notification patterns as Resolution module
+        /// </summary>
+        private async Task SendStateTransitionNotifications(AssessmentActionEnum action, AssessmentStatus previousStatus, AssessmentStatus newStatus)
+        {
+            try
+            {
+                var notifications = new List<Domain.Entities.Notifications.Notification>();
+
+                // Get fund details with all related entities
+                var fund = await _repository.Funds.ViewFundUsers(_assessment.FundId, trackChanges: false);
+                if (fund == null)
+                {
+                    return;
+                }
+
+                switch (action)
+                {
+                    case AssessmentActionEnum.Submission:
+                        await AddSubmissionNotifications(notifications, fund);
+                        break;
+                    case AssessmentActionEnum.Approval:
+                        await AddApprovalNotifications(notifications, fund);
+                        break;
+                    case AssessmentActionEnum.Rejection:
+                        await AddRejectionNotifications(notifications, fund);
+                        break;
+                    case AssessmentActionEnum.Distribution:
+                        await AddDistributionNotifications(notifications, fund);
+                        break;
+                    case AssessmentActionEnum.Completion:
+                        await AddCompletionNotifications(notifications, fund);
+                        break;
+                }
+
+                if (notifications.Any())
+                {
+                    await _repository.Notifications.AddRangeAsync(notifications);
+                }
+            }
+            catch (Exception)
+            {
+                // Log error but don't throw to avoid breaking the main operation
+            }
+        }
+
+        /// <summary>
+        /// Adds notifications for assessment submission (MSG002)
+        /// Notifies Legal Council and Board Secretaries
+        /// </summary>
+        private async Task AddSubmissionNotifications(List<Domain.Entities.Notifications.Notification> notifications, Domain.Entities.FundManagement.Fund fund)
+        {
+            // MSG002: Notify Legal Council attached to the fund
+            if (fund.LegalCouncilId > 0)
+            {
+                notifications.Add(new Domain.Entities.Notifications.Notification
+                {
+                    UserId = fund.LegalCouncilId,
+                    FundId = fund.Id,
+                    Title = string.Empty,
+                    Body = $"{_assessment.Title}|{fund.NameEn}|{_currentUserService.UserName}",
+                    NotificationType = (int)Domain.Entities.Notifications.NotificationType.AssessmentSubmittedForApproval,
+                    NotificationModule = (int)Domain.Entities.Notifications.NotificationModule.Assessments,
+                    IsRead = false
+                });
+            }
+
+            // MSG002: Notify Board Secretaries attached to the fund
+            var boardSecretaries = fund.FundBoardSecretaries ?? new List<Domain.Entities.FundManagement.FundBoardSecretary>();
+            foreach (var boardSecretary in boardSecretaries)
+            {
+                notifications.Add(new Domain.Entities.Notifications.Notification
+                {
+                    UserId = boardSecretary.UserId,
+                    FundId = fund.Id,
+                    Title = string.Empty,
+                    Body = $"{_assessment.Title}|{fund.NameEn}|{_currentUserService.UserName}",
+                    NotificationType = (int)Domain.Entities.Notifications.NotificationType.AssessmentSubmittedForApproval,
+                    NotificationModule = (int)Domain.Entities.Notifications.NotificationModule.Assessments,
+                    IsRead = false
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds notifications for assessment approval (MSG002)
+        /// Notifies assessment creator
+        /// </summary>
+        private async Task AddApprovalNotifications(List<Domain.Entities.Notifications.Notification> notifications, Domain.Entities.FundManagement.Fund fund)
+        {
+            if (_assessment.CreatedBy.HasValue)
+            {
+                notifications.Add(new Domain.Entities.Notifications.Notification
+                {
+                    UserId = _assessment.CreatedBy.Value,
+                    FundId = fund.Id,
+                    Title = string.Empty,
+                    Body = $"{_assessment.Title}|{fund.NameEn}|{_currentUserService.UserName}",
+                    NotificationType = (int)Domain.Entities.Notifications.NotificationType.AssessmentApproved,
+                    NotificationModule = (int)Domain.Entities.Notifications.NotificationModule.Assessments,
+                    IsRead = false
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds notifications for assessment rejection (MSG004)
+        /// Notifies assessment creator with rejection reason
+        /// </summary>
+        private async Task AddRejectionNotifications(List<Domain.Entities.Notifications.Notification> notifications, Domain.Entities.FundManagement.Fund fund)
+        {
+            if (_assessment.CreatedBy.HasValue)
+            {
+                var rejectionReason = _assessment.ReviewerComments ?? "No reason provided";
+                notifications.Add(new Domain.Entities.Notifications.Notification
+                {
+                    UserId = _assessment.CreatedBy.Value,
+                    FundId = fund.Id,
+                    Title = string.Empty,
+                    Body = $"{_assessment.Title}|{fund.NameEn}|{_currentUserService.UserName}|{rejectionReason}",
+                    NotificationType = (int)Domain.Entities.Notifications.NotificationType.AssessmentRejected,
+                    NotificationModule = (int)Domain.Entities.Notifications.NotificationModule.Assessments,
+                    IsRead = false
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds notifications for assessment distribution (MSG002)
+        /// Notifies all board members
+        /// </summary>
+        private async Task AddDistributionNotifications(List<Domain.Entities.Notifications.Notification> notifications, Domain.Entities.FundManagement.Fund fund)
+        {
+            // MSG002: Notify Board Members attached to the fund
+            var boardMembers = fund.BoardMembers ?? new List<Domain.Entities.FundManagement.FundBoardMember>();
+            foreach (var boardMember in boardMembers.Where(bm => bm.IsActive))
+            {
+                notifications.Add(new Domain.Entities.Notifications.Notification
+                {
+                    UserId = boardMember.UserId,
+                    FundId = fund.Id,
+                    Title = string.Empty,
+                    Body = $"{_assessment.Title}|{fund.NameEn}|{_currentUserService.UserName}",
+                    NotificationType = (int)Domain.Entities.Notifications.NotificationType.AssessmentDistributed,
+                    NotificationModule = (int)Domain.Entities.Notifications.NotificationModule.Assessments,
+                    IsRead = false
+                });
+            }
+        }
+
+        /// <summary>
+        /// Adds notifications for assessment completion (MSG002)
+        /// Notifies assessment creator and fund stakeholders
+        /// </summary>
+        private async Task AddCompletionNotifications(List<Domain.Entities.Notifications.Notification> notifications, Domain.Entities.FundManagement.Fund fund)
+        {
+            var recipients = new List<int>();
+
+            // Add assessment creator
+            if (_assessment.CreatedBy.HasValue)
+            {
+                recipients.Add(_assessment.CreatedBy.Value);
+            }
+
+            // MSG002: Notify Fund Managers attached to the fund
+            var fundManagers = fund.FundManagers ?? new List<Domain.Entities.FundManagement.FundManager>();
+            recipients.AddRange(fundManagers.Select(fm => fm.UserId));
+
+            // MSG002: Notify Legal Council attached to the fund
+            if (fund.LegalCouncilId > 0)
+            {
+                recipients.Add(fund.LegalCouncilId);
+            }
+
+            // MSG002: Notify Board Secretaries attached to the fund
+            var boardSecretaries = fund.FundBoardSecretaries ?? new List<Domain.Entities.FundManagement.FundBoardSecretary>();
+            recipients.AddRange(boardSecretaries.Select(bs => bs.UserId));
+
+            // Remove duplicates
+            recipients = recipients.Distinct().ToList();
+
+            foreach (var userId in recipients)
+            {
+                notifications.Add(new Domain.Entities.Notifications.Notification
+                {
+                    UserId = userId,
+                    FundId = fund.Id,
+                    Title = string.Empty,
+                    Body = $"{_assessment.Title}|{fund.NameEn}|{_currentUserService.UserName}",
+                    NotificationType = (int)Domain.Entities.Notifications.NotificationType.AssessmentCompleted,
+                    NotificationModule = (int)Domain.Entities.Notifications.NotificationModule.Assessments,
+                    IsRead = false
+                });
+            }
         }
 
         #endregion

@@ -102,98 +102,123 @@ namespace Domain.Entities.AssessmentManagement
         /// </summary>
         public virtual ICollection<AssessmentStatusHistory> StatusHistories { get; set; } = new List<AssessmentStatusHistory>();
 
-        #region State Design Pattern Implementation
-
         /// <summary>
-        /// Current state instance (not mapped to database)
-        /// Computed from Status property using State Factory
+        /// Gets the current assessment status following Resolution pattern
+        /// Returns the current AssessmentStatus value
         /// </summary>
-        [NotMapped]
-        private IAssessmentState? _currentState;
-
-        /// <summary>
-        /// Gets the current state instance
-        /// Initializes state from Status if not already set
-        /// </summary>
-        [NotMapped]
-        public IAssessmentState CurrentState => _currentState ??= CreateStateFromStatus(Status);
-
-        /// <summary>
-        /// Initializes the state from the current Status
-        /// Should be called after loading from database
-        /// </summary>
-        public void InitializeState()
+        public AssessmentStatus AssessmentStatus
         {
-            _currentState = CreateStateFromStatus(Status);
+            get => CurrentStatus();
         }
 
         /// <summary>
-        /// Creates a state instance from the given status
-        /// Simple factory method for state creation
+        /// Private method to get current status following Resolution.CurrentStatus() pattern
+        /// Returns the current status from the Status property
         /// </summary>
-        /// <param name="status">Assessment status</param>
-        /// <returns>Appropriate state instance</returns>
-        private static IAssessmentState CreateStateFromStatus(AssessmentStatus status)
+        private AssessmentStatus CurrentStatus()
         {
-            return status switch
-            {
-                AssessmentStatus.Draft => new DraftState(),
-                AssessmentStatus.WaitingForApproval => new WaitingForApprovalState(),
-                AssessmentStatus.Approved => new ApprovedState(),
-                AssessmentStatus.Rejected => new RejectedState(),
-                AssessmentStatus.Active => new ActiveState(),
-                AssessmentStatus.Completed => new CompletedState(),
-                _ => throw new ArgumentException($"Unsupported assessment status: {status}", nameof(status))
-            };
+            return Status;
+        }
+
+        #region State Pattern Implementation
+
+        [NotMapped]
+        private Application.Services.AssessmentStateContext _stateContext;
+
+        [NotMapped]
+        public Application.Services.AssessmentStateContext StateContext => _stateContext;
+
+        /// <summary>
+        /// Initializes the state pattern context
+        /// Should be called after loading from database with proper dependencies
+        /// </summary>
+        /// <param name="localizer">String localizer for localized messages</param>
+        /// <param name="currentUserService">Current user service for user context</param>
+        /// <param name="repository">Repository manager for data access</param>
+        public void InitializeState(Microsoft.Extensions.Localization.IStringLocalizer<Resources.SharedResources> localizer,
+            Abstraction.Contract.Service.ICurrentUserService currentUserService,
+            Abstraction.Contracts.Repository.IRepositoryManager repository)
+        {
+            _stateContext = new Application.Services.AssessmentStateContext(this, localizer, currentUserService, repository);
         }
 
         /// <summary>
-        /// Changes the assessment status using state pattern validation
+        /// Transitions to a new status using the State Pattern
+        /// Validates the transition before applying it
         /// </summary>
         /// <param name="targetStatus">Target status to transition to</param>
-        /// <param name="reason">Reason for the status change</param>
-        /// <returns>True if transition was successful, false otherwise</returns>
-        public bool ChangeStatus(AssessmentStatus targetStatus, string reason)
+        /// <param name="action">Action being performed</param>
+        /// <param name="reason">Reason for the transition (for audit trail)</param>
+        /// <returns>True if transition was successful, false if not allowed</returns>
+        public bool ChangeStatus(AssessmentStatus targetStatus, AssessmentActionEnum action, string reason = "")
         {
-            if (CurrentState.CanTransitionTo(targetStatus))
-            {
-                var success = CurrentState.TransitionTo(targetStatus, reason);
-                if (success)
-                {
-                    Status = targetStatus;
-                    _currentState = CreateStateFromStatus(targetStatus);
-                    return true;
-                }
-            }
-            return false;
+            return StateContext.TransitionTo(targetStatus, action, reason);
         }
 
         /// <summary>
-        /// Checks if the assessment can transition to the target status
+        /// Transitions to a new status with comprehensive audit logging
+        /// Follows the exact same pattern as Resolution.ChangeStatusWithAudit
         /// </summary>
-        /// <param name="targetStatus">Target status</param>
-        /// <returns>True if transition is allowed, false otherwise</returns>
+        /// <param name="targetStatus">Target status to transition to</param>
+        /// <param name="action">Action being performed</param>
+        /// <param name="reason">Reason for the transition</param>
+        /// <param name="localizedActionName">Localized action name for audit trail</param>
+        /// <param name="userId">User ID performing the action</param>
+        /// <param name="userRole">User role performing the action</param>
+        /// <param name="actionDetails">Additional action details</param>
+        /// <param name="rejectionReason">Rejection reason if applicable</param>
+        /// <returns>True if transition was successful, false if not allowed</returns>
+        public bool ChangeStatusWithAudit(AssessmentStatus targetStatus, AssessmentActionEnum action,
+            string reason, string localizedActionName, int userId, string userRole, string actionDetails = "", string rejectionReason = "")
+        {
+            return StateContext.TransitionToWithAudit(targetStatus, action, reason, localizedActionName,
+                userId, userRole, actionDetails, rejectionReason);
+        }
+
+        /// <summary>
+        /// Validates if a transition is allowed from current state
+        /// </summary>
+        /// <param name="targetStatus">Target status to validate</param>
+        /// <returns>True if transition is allowed</returns>
         public bool CanTransitionTo(AssessmentStatus targetStatus)
         {
-            return CurrentState.CanTransitionTo(targetStatus);
+            return StateContext.CanTransitionTo(targetStatus);
         }
 
         /// <summary>
-        /// Gets all allowed transitions from the current state
+        /// Gets all allowed transitions from current state
         /// </summary>
-        /// <returns>List of allowed target statuses</returns>
-        public List<AssessmentStatus> GetAllowedTransitions()
+        /// <returns>Collection of allowed target statuses</returns>
+        public IEnumerable<AssessmentStatus> GetAllowedTransitions()
         {
-            return CurrentState.GetAllowedTransitions();
+            return StateContext.GetAllowedTransitions();
         }
 
         /// <summary>
-        /// Gets the available actions for the current state
+        /// Validates if editing is allowed in current state
         /// </summary>
-        /// <returns>List of available action enums</returns>
-        public List<AssessmentActionEnum> GetAvailableActions()
+        /// <returns>True if editing is allowed</returns>
+        public bool CanEdit()
         {
-            return CurrentState.GetAvailableActions();
+            return StateContext.CanEdit();
+        }
+
+        /// <summary>
+        /// Validates if completion operations are allowed in current state
+        /// </summary>
+        /// <returns>True if completion is allowed</returns>
+        public bool CanComplete()
+        {
+            return StateContext.CanComplete();
+        }
+
+        /// <summary>
+        /// Validates if deletion is allowed in current state
+        /// </summary>
+        /// <returns>True if deletion is allowed</returns>
+        public bool CanDelete()
+        {
+            return StateContext.CanDelete();
         }
 
         /// <summary>
@@ -201,7 +226,7 @@ namespace Domain.Entities.AssessmentManagement
         /// </summary>
         public void Handle()
         {
-            CurrentState.Handle(this);
+            StateContext.Handle();
         }
 
         #endregion
