@@ -6,6 +6,7 @@ using Domain.Entities.Startegies;
 using Domain.Entities.FundManagement;
 using Domain.Entities.Notifications;
 using Domain.Entities.ResolutionManagement;
+using Domain.Entities.AssessmentManagement;
 
 namespace Infrastructure.Data
 {
@@ -40,6 +41,13 @@ namespace Infrastructure.Data
         public DbSet<ResolutionAttachment> ResolutionAttachments { get; set; }
         public DbSet<ResolutionStatusHistory> ResolutionStatusHistories { get; set; }
         public DbSet<ResolutionVote> ResolutionVotes { get; set; }
+
+        // Assessment Management
+        public DbSet<Assessment> Assessments { get; set; }
+        public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
+        public DbSet<AssessmentResponse> AssessmentResponses { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<AssessmentStatusHistory> AssessmentStatusHistories { get; set; }
 
         #endregion
 

@@ -1090,4 +1090,285 @@ You should add board members to be able to perform fund activities, at least 2 i
   <data name="RememberMeSessionCreatedAuditNote" xml:space="preserve">
     <value>Extended Remember Me session created for user</value>
   </data>
+  <!-- Assessment Status Localization -->
+  <data name="AssessmentStatusDraft" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="AssessmentStatusWaitingForApproval" xml:space="preserve">
+    <value>Waiting for Approval</value>
+  </data>
+  <data name="AssessmentStatusApproved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="AssessmentStatusRejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
+  <data name="AssessmentStatusActive" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="AssessmentStatusCompleted" xml:space="preserve">
+    <value>Completed</value>
+  </data>
+  <!-- Assessment Type Localization -->
+  <data name="AssessmentTypeQuestionnaire" xml:space="preserve">
+    <value>Questionnaire</value>
+  </data>
+  <data name="AssessmentTypeAttachment" xml:space="preserve">
+    <value>Attachment</value>
+  </data>
+  <!-- Question Type Localization -->
+  <data name="QuestionTypeSingleChoice" xml:space="preserve">
+    <value>Single Choice</value>
+  </data>
+  <data name="QuestionTypeText" xml:space="preserve">
+    <value>Text</value>
+  </data>
+  <!-- Assessment Validation Messages -->
+  <data name="AssessmentTitleRequired" xml:space="preserve">
+    <value>Assessment title is required</value>
+  </data>
+  <data name="AssessmentTypeRequired" xml:space="preserve">
+    <value>Assessment type is required</value>
+  </data>
+  <data name="AtLeastOneQuestionRequired" xml:space="preserve">
+    <value>At least one question is required</value>
+  </data>
+  <data name="AttachmentRequired" xml:space="preserve">
+    <value>Attachment is required</value>
+  </data>
+  <data name="RejectionReasonRequired" xml:space="preserve">
+    <value>Rejection reason is required</value>
+  </data>
+  <data name="AllRequiredQuestionsRequired" xml:space="preserve">
+    <value>Please answer all required questions before submitting</value>
+  </data>
+  <data name="QuestionTextRequired" xml:space="preserve">
+    <value>Question text is required</value>
+  </data>
+  <data name="QuestionOptionsRequired" xml:space="preserve">
+    <value>Question options are required for single choice questions</value>
+  </data>
+  <!-- Assessment Success Messages -->
+  <data name="AssessmentSubmittedForApproval" xml:space="preserve">
+    <value>Assessment submitted for approval successfully</value>
+  </data>
+  <data name="AssessmentSavedAsDraft" xml:space="preserve">
+    <value>Assessment saved as draft</value>
+  </data>
+  <data name="AssessmentApproved" xml:space="preserve">
+    <value>The assessment has been approved</value>
+  </data>
+  <data name="AssessmentRejected" xml:space="preserve">
+    <value>The assessment has been rejected</value>
+  </data>
+  <data name="AssessmentDistributed" xml:space="preserve">
+    <value>Assessment distributed successfully</value>
+  </data>
+  <data name="ResponseSubmittedSuccessfully" xml:space="preserve">
+    <value>Your response has been submitted successfully</value>
+  </data>
+  <!-- Assessment Notification Messages -->
+  <data name="NewAssessmentWaitingApproval" xml:space="preserve">
+    <value>A new assessment '{0}' is waiting for your approval</value>
+  </data>
+  <data name="AssessmentApprovedNotification" xml:space="preserve">
+    <value>Your assessment '{0}' has been approved</value>
+  </data>
+  <data name="AssessmentRejectedNotification" xml:space="preserve">
+    <value>Your assessment '{0}' has been rejected. Reason: {1}</value>
+  </data>
+  <data name="NewAssessmentReadyForResponse" xml:space="preserve">
+    <value>A new assessment, '{0}', is ready for your review. Please submit your response</value>
+  </data>
+  <data name="AssessmentDistributionConfirmation" xml:space="preserve">
+    <value>Are you sure you want to send this assessment to {0} board members? It cannot be recalled</value>
+  </data>
+  <!-- Assessment Error Messages -->
+  <data name="InvalidStatusTransition" xml:space="preserve">
+    <value>Invalid status transition</value>
+  </data>
+  <data name="AssessmentNotFound" xml:space="preserve">
+    <value>Assessment not found</value>
+  </data>
+  <data name="UnauthorizedAssessmentAccess" xml:space="preserve">
+    <value>Unauthorized access to assessment</value>
+  </data>
+  <data name="AssessmentAlreadyResponded" xml:space="preserve">
+    <value>You have already responded to this assessment</value>
+  </data>
+  <data name="AssessmentNotActive" xml:space="preserve">
+    <value>Assessment is not active for responses</value>
+  </data>
+  <!-- Additional Assessment Validation Messages -->
+  <data name="AssessmentTitleMaxLength" xml:space="preserve">
+    <value>Assessment title must be less than 255 characters</value>
+  </data>
+  <data name="AssessmentWaitingTooLong" xml:space="preserve">
+    <value>Warning: Assessment has been waiting for approval for more than {0} days</value>
+  </data>
+  <data name="AssessmentReadyForDistribution" xml:space="preserve">
+    <value>Assessment is ready for distribution to board members</value>
+  </data>
+  <data name="AssessmentCannotBeModified" xml:space="preserve">
+    <value>Assessment cannot be modified in current status</value>
+  </data>
+  <data name="AssessmentResponsesReceived" xml:space="preserve">
+    <value>Assessment responses have been received from board members</value>
+  </data>
+  <data name="AssessmentCompletionReady" xml:space="preserve">
+    <value>Assessment is ready for completion</value>
+  </data>
+  <!-- Assessment Action Localization -->
+  <data name="AssessmentSubmitForApproval" xml:space="preserve">
+    <value>Submit for Approval</value>
+  </data>
+  <data name="AssessmentApprove" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="AssessmentReject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="AssessmentDistribute" xml:space="preserve">
+    <value>Distribute</value>
+  </data>
+  <data name="AssessmentComplete" xml:space="preserve">
+    <value>Complete</value>
+  </data>
+  <data name="AssessmentEdit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="AssessmentViewDetails" xml:space="preserve">
+    <value>View Details</value>
+  </data>
+  <data name="AssessmentDelete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="AssessmentSave" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="AssessmentRespond" xml:space="preserve">
+    <value>Respond</value>
+  </data>
+  <!-- Assessment Review Messages -->
+  <data name="ReviewerInformationRequired" xml:space="preserve">
+    <value>Reviewer information is required</value>
+  </data>
+  <data name="ReviewDateRequired" xml:space="preserve">
+    <value>Review date is required</value>
+  </data>
+  <data name="FundBoardMembersRequired" xml:space="preserve">
+    <value>Fund must have board members for assessment distribution</value>
+  </data>
+  <!-- Additional Validation Messages -->
+  <data name="InvalidAttachmentId" xml:space="preserve">
+    <value>Invalid attachment ID</value>
+  </data>
+  <data name="QuestionsNotAllowedForAttachment" xml:space="preserve">
+    <value>Questions should not be provided for attachment type assessments</value>
+  </data>
+  <data name="QuestionDisplayOrdersUnique" xml:space="preserve">
+    <value>Question display orders must be unique</value>
+  </data>
+  <!-- Question Validation Messages -->
+  <data name="QuestionTextMaxLength" xml:space="preserve">
+    <value>Question text must be less than 1000 characters</value>
+  </data>
+  <data name="QuestionTypeRequired" xml:space="preserve">
+    <value>Question type is required</value>
+  </data>
+  <data name="QuestionDisplayOrderRequired" xml:space="preserve">
+    <value>Question display order must be greater than 0</value>
+  </data>
+  <data name="QuestionOptionsMinimumTwo" xml:space="preserve">
+    <value>Single choice questions must have at least 2 options</value>
+  </data>
+  <data name="QuestionOptionsNotAllowedForText" xml:space="preserve">
+    <value>Options should not be provided for text questions</value>
+  </data>
+  <!-- Assessment Notification Messages -->
+  <data name="AssessmentSubmittedForApprovalNotificationTitle" xml:space="preserve">
+    <value>Assessment Submitted for Approval</value>
+  </data>
+  <data name="AssessmentSubmittedForApprovalNotificationBody" xml:space="preserve">
+    <value>Assessment '{0}' in fund '{1}' has been submitted for approval by {2}</value>
+  </data>
+  <data name="AssessmentApprovedNotificationTitle" xml:space="preserve">
+    <value>Assessment Approved</value>
+  </data>
+  <data name="AssessmentApprovedNotificationBody" xml:space="preserve">
+    <value>Your assessment '{0}' in fund '{1}' has been approved by {2}</value>
+  </data>
+  <data name="AssessmentRejectedNotificationTitle" xml:space="preserve">
+    <value>Assessment Rejected</value>
+  </data>
+  <data name="AssessmentRejectedNotificationBody" xml:space="preserve">
+    <value>Your assessment '{0}' in fund '{1}' has been rejected by {2}. Reason: {3}</value>
+  </data>
+  <data name="AssessmentDistributedNotificationTitle" xml:space="preserve">
+    <value>New Assessment Available</value>
+  </data>
+  <data name="AssessmentDistributedNotificationBody" xml:space="preserve">
+    <value>Assessment '{0}' in fund '{1}' is now available for your response. Distributed by {2}</value>
+  </data>
+  <data name="AssessmentCompletedNotificationTitle" xml:space="preserve">
+    <value>Assessment Completed</value>
+  </data>
+  <data name="AssessmentCompletedNotificationBody" xml:space="preserve">
+    <value>Assessment '{0}' in fund '{1}' has been completed by {2}</value>
+  </data>
+  <!-- Assessment State Transition Messages -->
+  <data name="AssessmentStatusTransitionMessage" xml:space="preserve">
+    <value>Assessment status changed from {0} to {1}. Reason: {2}</value>
+  </data>
+  <!-- Assessment State Information Messages -->
+  <data name="AssessmentPendingResponsesInfo" xml:space="preserve">
+    <value>Info: {0} pending responses out of {1}</value>
+  </data>
+  <data name="AssessmentAllResponsesReceivedInfo" xml:space="preserve">
+    <value>Info: All responses received, assessment can be completed</value>
+  </data>
+  <data name="AssessmentNoResponsesWarning" xml:space="preserve">
+    <value>Warning: No responses have been created for this assessment yet</value>
+  </data>
+  <data name="AssessmentCompletionStatistics" xml:space="preserve">
+    <value>Info: Received {0} responses out of {1} ({2:F1}%)</value>
+  </data>
+  <data name="AssessmentNoResponsesReceived" xml:space="preserve">
+    <value>Warning: No responses were received</value>
+  </data>
+  <data name="AssessmentNoResponsesExist" xml:space="preserve">
+    <value>Warning: No responses exist for this assessment</value>
+  </data>
+  <!-- Additional Assessment Action Localization -->
+  <data name="AssessmentViewRejectionReason" xml:space="preserve">
+    <value>View Rejection Reason</value>
+  </data>
+  <data name="AssessmentResubmit" xml:space="preserve">
+    <value>Resubmit</value>
+  </data>
+  <data name="AssessmentViewResponses" xml:space="preserve">
+    <value>View Responses</value>
+  </data>
+  <data name="AssessmentViewResults" xml:space="preserve">
+    <value>View Results</value>
+  </data>
+  <data name="AssessmentCompleteAssessment" xml:space="preserve">
+    <value>Complete Assessment</value>
+  </data>
+  <data name="AssessmentExportResults" xml:space="preserve">
+    <value>Export Results</value>
+  </data>
+  <data name="AssessmentExportData" xml:space="preserve">
+    <value>Export Data</value>
+  </data>
+  <data name="AssessmentArchive" xml:space="preserve">
+    <value>Archive</value>
+  </data>
+  <!-- Question Type Localization -->
+  <data name="QuestionTypeSingleChoice" xml:space="preserve">
+    <value>Single Choice</value>
+  </data>
+  <data name="QuestionTypeText" xml:space="preserve">
+    <value>Text</value>
+  </data>
 </root>

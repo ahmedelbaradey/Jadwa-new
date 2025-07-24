@@ -7,11 +7,13 @@ using Abstraction.Contracts.Repository;
 using Abstraction.Contracts.Repository.Fund;
 using Abstraction.Contracts.Repository.Products;
 using Abstraction.Contracts.Repository.Resolution;
+using Abstraction.Contract.Repository.AssessmentManagement;
 using Domain.Entities.ResolutionManagement;
 using Infrastructure.Data;
 using Infrastructure.Repository.Fund;
 using Infrastructure.Repository.Notifications;
 using Infrastructure.Repository.Resolution;
+using Infrastructure.Repository.AssessmentManagement;
 using Microsoft.Extensions.Localization;
 using Repository.Catalog;
 using Resources;
@@ -40,6 +42,13 @@ namespace Infrastructure.Repository
         private readonly Lazy<IResolutionTypeRepository> _iResolutionTypeRepository;
         private readonly Lazy<IResolutionVoteRepository> _iResolutionVoteRepository;
         private readonly Lazy<IResolutionStatusHistoryRepository> _iResolutionStatusHistoryRepository;
+
+        // Assessment Management
+        private readonly Lazy<IAssessmentRepository> _iAssessmentRepository;
+        private readonly Lazy<IAssessmentQuestionRepository> _iAssessmentQuestionRepository;
+        private readonly Lazy<IAssessmentResponseRepository> _iAssessmentResponseRepository;
+        private readonly Lazy<IAnswerRepository> _iAnswerRepository;
+
         private readonly INotificationLocalizationService _localizationService;
         private readonly ILoggerManager _logger; // Optional logger for logging errors and warnings
  
@@ -72,6 +81,12 @@ namespace Infrastructure.Repository
             _iResolutionTypeRepository = new Lazy<IResolutionTypeRepository>(() => new ResolutionTypeRepository(repositoryContext, currentUserService));
             _iResolutionVoteRepository = new Lazy<IResolutionVoteRepository>(() => new ResolutionVoteRepository(repositoryContext, currentUserService));
             _iResolutionStatusHistoryRepository = new Lazy<IResolutionStatusHistoryRepository>(() =>  new ResolutionStatusHistoryRepository(repositoryContext, currentUserService));
+
+            // Assessment Management
+            _iAssessmentRepository = new Lazy<IAssessmentRepository>(() => new AssessmentRepository(repositoryContext, currentUserService));
+            _iAssessmentQuestionRepository = new Lazy<IAssessmentQuestionRepository>(() => new AssessmentQuestionRepository(repositoryContext, currentUserService));
+            _iAssessmentResponseRepository = new Lazy<IAssessmentResponseRepository>(() => new AssessmentResponseRepository(repositoryContext, currentUserService));
+            _iAnswerRepository = new Lazy<IAnswerRepository>(() => new AnswerRepository(repositoryContext, currentUserService));
         }
 
         public ICategoryRepository Categories => _iCategpryRepository.Value;
@@ -94,5 +109,11 @@ namespace Infrastructure.Repository
 
         public IResolutionVoteRepository ResolutionVotes => _iResolutionVoteRepository.Value;
         public IResolutionStatusHistoryRepository ResolutionStatusHistory => _iResolutionStatusHistoryRepository.Value;
+
+        // Assessment Management
+        public IAssessmentRepository Assessments => _iAssessmentRepository.Value;
+        public IAssessmentQuestionRepository AssessmentQuestions => _iAssessmentQuestionRepository.Value;
+        public IAssessmentResponseRepository AssessmentResponses => _iAssessmentResponseRepository.Value;
+        public IAnswerRepository Answers => _iAnswerRepository.Value;
     }
 }

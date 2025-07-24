@@ -1090,4 +1090,285 @@
   <data name="RememberMeSessionCreatedAuditNote" xml:space="preserve">
     <value>تم إنشاء جلسة "تذكرني" ممتدة للمستخدم</value>
   </data>
+  <!-- Assessment Status Localization -->
+  <data name="AssessmentStatusDraft" xml:space="preserve">
+    <value>مسودة</value>
+  </data>
+  <data name="AssessmentStatusWaitingForApproval" xml:space="preserve">
+    <value>في انتظار الموافقة</value>
+  </data>
+  <data name="AssessmentStatusApproved" xml:space="preserve">
+    <value>موافق عليه</value>
+  </data>
+  <data name="AssessmentStatusRejected" xml:space="preserve">
+    <value>مرفوض</value>
+  </data>
+  <data name="AssessmentStatusActive" xml:space="preserve">
+    <value>نشط</value>
+  </data>
+  <data name="AssessmentStatusCompleted" xml:space="preserve">
+    <value>مكتمل</value>
+  </data>
+  <!-- Assessment Type Localization -->
+  <data name="AssessmentTypeQuestionnaire" xml:space="preserve">
+    <value>استبيان</value>
+  </data>
+  <data name="AssessmentTypeAttachment" xml:space="preserve">
+    <value>مرفق</value>
+  </data>
+  <!-- Question Type Localization -->
+  <data name="QuestionTypeSingleChoice" xml:space="preserve">
+    <value>اختيار واحد</value>
+  </data>
+  <data name="QuestionTypeText" xml:space="preserve">
+    <value>نص</value>
+  </data>
+  <!-- Assessment Validation Messages -->
+  <data name="AssessmentTitleRequired" xml:space="preserve">
+    <value>عنوان التقييم مطلوب</value>
+  </data>
+  <data name="AssessmentTypeRequired" xml:space="preserve">
+    <value>نوع التقييم مطلوب</value>
+  </data>
+  <data name="AtLeastOneQuestionRequired" xml:space="preserve">
+    <value>مطلوب سؤال واحد على الأقل</value>
+  </data>
+  <data name="AttachmentRequired" xml:space="preserve">
+    <value>مطلوب إرفاق ملف</value>
+  </data>
+  <data name="RejectionReasonRequired" xml:space="preserve">
+    <value>سبب الرفض مطلوب</value>
+  </data>
+  <data name="AllRequiredQuestionsRequired" xml:space="preserve">
+    <value>يرجى الإجابة على جميع الأسئلة المطلوبة قبل الإرسال</value>
+  </data>
+  <data name="QuestionTextRequired" xml:space="preserve">
+    <value>نص السؤال مطلوب</value>
+  </data>
+  <data name="QuestionOptionsRequired" xml:space="preserve">
+    <value>خيارات السؤال مطلوبة للأسئلة ذات الاختيار الواحد</value>
+  </data>
+  <!-- Assessment Success Messages -->
+  <data name="AssessmentSubmittedForApproval" xml:space="preserve">
+    <value>تم إرسال التقييم للموافقة بنجاح</value>
+  </data>
+  <data name="AssessmentSavedAsDraft" xml:space="preserve">
+    <value>تم حفظ التقييم كمسودة</value>
+  </data>
+  <data name="AssessmentApproved" xml:space="preserve">
+    <value>تمت الموافقة على التقييم</value>
+  </data>
+  <data name="AssessmentRejected" xml:space="preserve">
+    <value>تم رفض التقييم</value>
+  </data>
+  <data name="AssessmentDistributed" xml:space="preserve">
+    <value>تم توزيع التقييم بنجاح</value>
+  </data>
+  <data name="ResponseSubmittedSuccessfully" xml:space="preserve">
+    <value>تم استلام إجابتك بنجاح</value>
+  </data>
+  <!-- Assessment Notification Messages -->
+  <data name="NewAssessmentWaitingApproval" xml:space="preserve">
+    <value>تقييم جديد بعنوان "{0}" ينتظر موافقتك</value>
+  </data>
+  <data name="AssessmentApprovedNotification" xml:space="preserve">
+    <value>تمت الموافقة على تقييمك "{0}"</value>
+  </data>
+  <data name="AssessmentRejectedNotification" xml:space="preserve">
+    <value>تم رفض تقييمك "{0}". السبب: {1}</value>
+  </data>
+  <data name="NewAssessmentReadyForResponse" xml:space="preserve">
+    <value>تقييم جديد بعنوان "{0}" جاهز لمراجعتك. يرجى تقديم إجابتك</value>
+  </data>
+  <data name="AssessmentDistributionConfirmation" xml:space="preserve">
+    <value>هل أنت متأكد من إرسال هذا التقييم إلى {0} عضو مجلس إدارة؟ لا يمكن استرجاعه</value>
+  </data>
+  <!-- Assessment Error Messages -->
+  <data name="InvalidStatusTransition" xml:space="preserve">
+    <value>انتقال حالة غير صالح</value>
+  </data>
+  <data name="AssessmentNotFound" xml:space="preserve">
+    <value>التقييم غير موجود</value>
+  </data>
+  <data name="UnauthorizedAssessmentAccess" xml:space="preserve">
+    <value>وصول غير مصرح به للتقييم</value>
+  </data>
+  <data name="AssessmentAlreadyResponded" xml:space="preserve">
+    <value>لقد قمت بالإجابة على هذا التقييم بالفعل</value>
+  </data>
+  <data name="AssessmentNotActive" xml:space="preserve">
+    <value>التقييم غير نشط للإجابات</value>
+  </data>
+  <!-- Additional Assessment Validation Messages -->
+  <data name="AssessmentTitleMaxLength" xml:space="preserve">
+    <value>عنوان التقييم يجب أن يكون أقل من 255 حرف</value>
+  </data>
+  <data name="AssessmentWaitingTooLong" xml:space="preserve">
+    <value>تحذير: التقييم في انتظار الموافقة لأكثر من {0} أيام</value>
+  </data>
+  <data name="AssessmentReadyForDistribution" xml:space="preserve">
+    <value>التقييم جاهز للتوزيع على أعضاء مجلس الإدارة</value>
+  </data>
+  <data name="AssessmentCannotBeModified" xml:space="preserve">
+    <value>لا يمكن تعديل التقييم في الحالة الحالية</value>
+  </data>
+  <data name="AssessmentResponsesReceived" xml:space="preserve">
+    <value>تم استلام إجابات التقييم من أعضاء مجلس الإدارة</value>
+  </data>
+  <data name="AssessmentCompletionReady" xml:space="preserve">
+    <value>التقييم جاهز للإكمال</value>
+  </data>
+  <!-- Assessment Action Localization -->
+  <data name="AssessmentSubmitForApproval" xml:space="preserve">
+    <value>إرسال للموافقة</value>
+  </data>
+  <data name="AssessmentApprove" xml:space="preserve">
+    <value>موافقة</value>
+  </data>
+  <data name="AssessmentReject" xml:space="preserve">
+    <value>رفض</value>
+  </data>
+  <data name="AssessmentDistribute" xml:space="preserve">
+    <value>توزيع</value>
+  </data>
+  <data name="AssessmentComplete" xml:space="preserve">
+    <value>إكمال</value>
+  </data>
+  <data name="AssessmentEdit" xml:space="preserve">
+    <value>تحرير</value>
+  </data>
+  <data name="AssessmentViewDetails" xml:space="preserve">
+    <value>عرض التفاصيل</value>
+  </data>
+  <data name="AssessmentDelete" xml:space="preserve">
+    <value>حذف</value>
+  </data>
+  <data name="AssessmentSave" xml:space="preserve">
+    <value>حفظ</value>
+  </data>
+  <data name="AssessmentRespond" xml:space="preserve">
+    <value>إجابة</value>
+  </data>
+  <!-- Assessment Review Messages -->
+  <data name="ReviewerInformationRequired" xml:space="preserve">
+    <value>معلومات المراجع مطلوبة</value>
+  </data>
+  <data name="ReviewDateRequired" xml:space="preserve">
+    <value>تاريخ المراجعة مطلوب</value>
+  </data>
+  <data name="FundBoardMembersRequired" xml:space="preserve">
+    <value>يجب أن يحتوي الصندوق على أعضاء مجلس إدارة لتوزيع التقييم</value>
+  </data>
+  <!-- Additional Validation Messages -->
+  <data name="InvalidAttachmentId" xml:space="preserve">
+    <value>معرف المرفق غير صالح</value>
+  </data>
+  <data name="QuestionsNotAllowedForAttachment" xml:space="preserve">
+    <value>لا يجب تقديم أسئلة لتقييمات نوع المرفق</value>
+  </data>
+  <data name="QuestionDisplayOrdersUnique" xml:space="preserve">
+    <value>ترتيب عرض الأسئلة يجب أن يكون فريد</value>
+  </data>
+  <!-- Question Validation Messages -->
+  <data name="QuestionTextMaxLength" xml:space="preserve">
+    <value>نص السؤال يجب أن يكون أقل من 1000 حرف</value>
+  </data>
+  <data name="QuestionTypeRequired" xml:space="preserve">
+    <value>نوع السؤال مطلوب</value>
+  </data>
+  <data name="QuestionDisplayOrderRequired" xml:space="preserve">
+    <value>ترتيب عرض السؤال يجب أن يكون أكبر من 0</value>
+  </data>
+  <data name="QuestionOptionsMinimumTwo" xml:space="preserve">
+    <value>أسئلة الاختيار الواحد يجب أن تحتوي على خيارين على الأقل</value>
+  </data>
+  <data name="QuestionOptionsNotAllowedForText" xml:space="preserve">
+    <value>لا يجب تقديم خيارات للأسئلة النصية</value>
+  </data>
+  <!-- Assessment Notification Messages -->
+  <data name="AssessmentSubmittedForApprovalNotificationTitle" xml:space="preserve">
+    <value>تم إرسال التقييم للموافقة</value>
+  </data>
+  <data name="AssessmentSubmittedForApprovalNotificationBody" xml:space="preserve">
+    <value>تم إرسال التقييم '{0}' في الصندوق '{1}' للموافقة من قبل {2}</value>
+  </data>
+  <data name="AssessmentApprovedNotificationTitle" xml:space="preserve">
+    <value>تمت الموافقة على التقييم</value>
+  </data>
+  <data name="AssessmentApprovedNotificationBody" xml:space="preserve">
+    <value>تمت الموافقة على تقييمك '{0}' في الصندوق '{1}' من قبل {2}</value>
+  </data>
+  <data name="AssessmentRejectedNotificationTitle" xml:space="preserve">
+    <value>تم رفض التقييم</value>
+  </data>
+  <data name="AssessmentRejectedNotificationBody" xml:space="preserve">
+    <value>تم رفض تقييمك '{0}' في الصندوق '{1}' من قبل {2}. السبب: {3}</value>
+  </data>
+  <data name="AssessmentDistributedNotificationTitle" xml:space="preserve">
+    <value>تقييم جديد متاح</value>
+  </data>
+  <data name="AssessmentDistributedNotificationBody" xml:space="preserve">
+    <value>التقييم '{0}' في الصندوق '{1}' متاح الآن لإجابتك. تم توزيعه من قبل {2}</value>
+  </data>
+  <data name="AssessmentCompletedNotificationTitle" xml:space="preserve">
+    <value>تم إكمال التقييم</value>
+  </data>
+  <data name="AssessmentCompletedNotificationBody" xml:space="preserve">
+    <value>تم إكمال التقييم '{0}' في الصندوق '{1}' من قبل {2}</value>
+  </data>
+  <!-- Assessment State Transition Messages -->
+  <data name="AssessmentStatusTransitionMessage" xml:space="preserve">
+    <value>تم تغيير حالة التقييم من {0} إلى {1}. السبب: {2}</value>
+  </data>
+  <!-- Assessment State Information Messages -->
+  <data name="AssessmentPendingResponsesInfo" xml:space="preserve">
+    <value>معلومات: {0} إجابة معلقة من أصل {1}</value>
+  </data>
+  <data name="AssessmentAllResponsesReceivedInfo" xml:space="preserve">
+    <value>معلومات: تم استلام جميع الإجابات، يمكن إغلاق التقييم</value>
+  </data>
+  <data name="AssessmentNoResponsesWarning" xml:space="preserve">
+    <value>تحذير: لم يتم إنشاء إجابات للتقييم بعد</value>
+  </data>
+  <data name="AssessmentCompletionStatistics" xml:space="preserve">
+    <value>معلومات: تم استلام {0} إجابة من أصل {1} ({2:F1}%)</value>
+  </data>
+  <data name="AssessmentNoResponsesReceived" xml:space="preserve">
+    <value>تحذير: لم يتم استلام أي إجابات</value>
+  </data>
+  <data name="AssessmentNoResponsesExist" xml:space="preserve">
+    <value>تحذير: لا توجد إجابات للتقييم</value>
+  </data>
+  <!-- Additional Assessment Action Localization -->
+  <data name="AssessmentViewRejectionReason" xml:space="preserve">
+    <value>عرض سبب الرفض</value>
+  </data>
+  <data name="AssessmentResubmit" xml:space="preserve">
+    <value>إعادة إرسال</value>
+  </data>
+  <data name="AssessmentViewResponses" xml:space="preserve">
+    <value>عرض الإجابات</value>
+  </data>
+  <data name="AssessmentViewResults" xml:space="preserve">
+    <value>عرض النتائج</value>
+  </data>
+  <data name="AssessmentCompleteAssessment" xml:space="preserve">
+    <value>إغلاق التقييم</value>
+  </data>
+  <data name="AssessmentExportResults" xml:space="preserve">
+    <value>تصدير النتائج</value>
+  </data>
+  <data name="AssessmentExportData" xml:space="preserve">
+    <value>تصدير البيانات</value>
+  </data>
+  <data name="AssessmentArchive" xml:space="preserve">
+    <value>أرشفة</value>
+  </data>
+  <!-- Question Type Localization -->
+  <data name="QuestionTypeSingleChoice" xml:space="preserve">
+    <value>اختيار واحد</value>
+  </data>
+  <data name="QuestionTypeText" xml:space="preserve">
+    <value>نص</value>
+  </data>
 </root>
