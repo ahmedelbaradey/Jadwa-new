@@ -6,7 +6,9 @@ using Domain.Entities.Startegies;
 using Domain.Entities.FundManagement;
 using Domain.Entities.Notifications;
 using Domain.Entities.ResolutionManagement;
+using Domain.Entities.MeetingManagement;
 using Domain.Entities.AssessmentManagement;
+ 
 
 namespace Infrastructure.Data
 {
@@ -41,6 +43,12 @@ namespace Infrastructure.Data
         public DbSet<ResolutionAttachment> ResolutionAttachments { get; set; }
         public DbSet<ResolutionStatusHistory> ResolutionStatusHistories { get; set; }
         public DbSet<ResolutionVote> ResolutionVotes { get; set; }
+
+        // Meeting Management
+        public DbSet<MeetingTimeProposal> MeetingTimeProposals { get; set; }
+        public DbSet<ProposedDate> ProposedDates { get; set; }
+        public DbSet<MeetingTimeVote> MeetingTimeVotes { get; set; }
+        public DbSet<MeetingStatusHistory> MeetingStatusHistories { get; set; }
 
         // Assessment Management
         public DbSet<Assessment> Assessments { get; set; }

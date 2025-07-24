@@ -350,6 +350,46 @@
         // Resolution Edit Notification Messages (MSG005 - Notification type)
         // Note: ResolutionUpdatedNotificationBody is already defined above for MSG005 notifications
 
+        // Meeting Time Proposal Messages (User Story 1)
+        public const string MeetingTimeProposalCreatedSuccessfully = "MeetingTimeProposalCreatedSuccessfully"; // MSG-MTV-SUC-01
+        public const string MeetingSubjectRequired = "MeetingSubjectRequired"; // MSG-MTV-ERR-01
+        public const string AtLeastOneProposedTimeRequired = "AtLeastOneProposedTimeRequired"; // MSG-MTV-ERR-02
+        public const string InvalidFileTypePdfOnly = "InvalidFileTypePdfOnly"; // MSG-MTV-ERR-03
+        public const string FileUploadFailed = "FileUploadFailed"; // MSG-MTV-ERR-04
+        public const string ConfirmDiscardChanges = "ConfirmDiscardChanges"; // MSG-MTV-WRN-01
+        public const string NewVoteStartedNotificationTitle = "NewVoteStartedNotificationTitle"; // MSG-MTV-NOT-01
+        public const string NewVoteStartedNotificationBody = "NewVoteStartedNotificationBody"; // MSG-MTV-NOT-01
+
+        // Meeting Time Vote Messages (User Story 2)
+        public const string VoteSubmittedSuccessfully = "VoteSubmittedSuccessfully"; // MSG-VMT-SUC-01
+        public const string SelectAtLeastOneOption = "SelectAtLeastOneOption"; // MSG-VMT-ERR-01
+        public const string VotingCompletedNotificationTitle = "VotingCompletedNotificationTitle"; // MSG-VMT-NOT-01
+        public const string VotingCompletedNotificationBody = "VotingCompletedNotificationBody"; // MSG-VMT-NOT-01
+        public const string VotingForProposalComplete = "VotingForProposalComplete"; // MSG-VMT-INF-01
+        public const string AlreadyVotedOnProposal = "AlreadyVotedOnProposal"; // MSG-VMT-INF-02
+
+        // Additional validation messages for meetings
+        public const string FutureDateRequired = "FutureDateRequired";
+        public const string DuplicateSelection = "DuplicateSelection";
+
+        // Meeting Status Descriptions
+        public const string MeetingStatusScheduled = "MeetingStatusScheduled";
+        public const string MeetingStatusInProgress = "MeetingStatusInProgress";
+        public const string MeetingStatusFinished = "MeetingStatusFinished";
+        public const string MeetingStatusCancelled = "MeetingStatusCancelled";
+        public const string MeetingStatusPostponed = "MeetingStatusPostponed";
+
+        // Meeting State Validation Messages
+        public const string MeetingScheduledValidationMessage = "MeetingScheduledValidationMessage";
+        public const string MeetingNotifyAttendeesMessage = "MeetingNotifyAttendeesMessage";
+        public const string MeetingInProgressValidationMessage = "MeetingInProgressValidationMessage";
+        public const string MeetingLiveFeaturesMessage = "MeetingLiveFeaturesMessage";
+        public const string MeetingFinishedValidationMessage = "MeetingFinishedValidationMessage";
+        public const string MeetingMinutesCanBeCreatedMessage = "MeetingMinutesCanBeCreatedMessage";
+        public const string MeetingCancelledValidationMessage = "MeetingCancelledValidationMessage";
+        public const string MeetingPostponedValidationMessage = "MeetingPostponedValidationMessage";
+        public const string MeetingRescheduleMessage = "MeetingRescheduleMessage";
+
         // Audit Action Localization Keys for Resolution Status History
         public const string AuditActionResolutionCreation = "AuditActionResolutionCreation";
         public const string AuditActionResolutionEdit = "AuditActionResolutionEdit";

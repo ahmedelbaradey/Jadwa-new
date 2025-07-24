@@ -7,6 +7,7 @@ using Abstraction.Contracts.Logger;
 using Abstraction.Contracts.Repository;
 using Abstraction.Contracts.Service;
 using Domain.Entities.Users;
+using Domain.Entities.MeetingManagement.State;
 using Domain.Helpers;
 using Infrastructure.Data;
 using Infrastructure.Logger;
@@ -55,6 +56,9 @@ namespace Infrastructure
             services.AddHttpClient<WhatsAppNotificationService>();
             services.AddScoped<IAuditLocalizationService, AuditLocalizationService>();
             services.AddScoped<ISessionManagementService, SessionManagementService>();
+
+            // Register Meeting State Factory
+            services.AddScoped<MeetingStateFactory>();
 
             return services;
         }

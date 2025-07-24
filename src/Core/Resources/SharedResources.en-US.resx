@@ -1090,6 +1090,102 @@ You should add board members to be able to perform fund activities, at least 2 i
   <data name="RememberMeSessionCreatedAuditNote" xml:space="preserve">
     <value>Extended Remember Me session created for user</value>
   </data>
+ 
+  <!-- Meeting Time Proposal Messages (User Story 1) -->
+  <data name="MeetingTimeProposalCreatedSuccessfully" xml:space="preserve">
+    <value>Proposal sent for voting successfully.</value>
+  </data>
+  <data name="MeetingSubjectRequired" xml:space="preserve">
+    <value>Meeting Subject is required.</value>
+  </data>
+  <data name="AtLeastOneProposedTimeRequired" xml:space="preserve">
+    <value>Please add at least one proposed date and time.</value>
+  </data>
+  <data name="InvalidFileTypePdfOnly" xml:space="preserve">
+    <value>Invalid file type. Please upload a PDF file only.</value>
+  </data>
+  <data name="FileUploadFailed" xml:space="preserve">
+    <value>File upload failed. Please try again.</value>
+  </data>
+  <data name="ConfirmDiscardChanges" xml:space="preserve">
+    <value>Are you sure you want to discard your changes?</value>
+  </data>
+  <data name="NewVoteStartedNotificationTitle" xml:space="preserve">
+    <value>New Meeting Time Vote</value>
+  </data>
+  <data name="NewVoteStartedNotificationBody" xml:space="preserve">
+    <value>A new vote has started for "{0}".</value>
+  </data>
+  <!-- Meeting Time Vote Messages (User Story 2) -->
+  <data name="VoteSubmittedSuccessfully" xml:space="preserve">
+    <value>Your vote has been submitted successfully.</value>
+  </data>
+  <data name="SelectAtLeastOneOption" xml:space="preserve">
+    <value>Please select at least one option before submitting.</value>
+  </data>
+  <data name="VotingCompletedNotificationTitle" xml:space="preserve">
+    <value>Meeting Time Voting Complete</value>
+  </data>
+  <data name="VotingCompletedNotificationBody" xml:space="preserve">
+    <value>Voting for the meeting "{0}" is now complete.</value>
+  </data>
+  <data name="VotingForProposalComplete" xml:space="preserve">
+    <value>Voting for this proposal is complete.</value>
+  </data>
+  <data name="AlreadyVotedOnProposal" xml:space="preserve">
+    <value>You have already voted on this proposal.</value>
+  </data>
+  <!-- Additional validation messages for meetings -->
+  <data name="FutureDateRequired" xml:space="preserve">
+    <value>Date must be in the future.</value>
+  </data>
+  <data name="DuplicateSelection" xml:space="preserve">
+    <value>Duplicate selections are not allowed.</value>
+  </data>
+  <!-- Meeting Status Descriptions -->
+  <data name="MeetingStatusScheduled" xml:space="preserve">
+    <value>Scheduled</value>
+  </data>
+  <data name="MeetingStatusInProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
+  <data name="MeetingStatusFinished" xml:space="preserve">
+    <value>Finished</value>
+  </data>
+  <data name="MeetingStatusCancelled" xml:space="preserve">
+    <value>Cancelled</value>
+  </data>
+  <data name="MeetingStatusPostponed" xml:space="preserve">
+    <value>Postponed</value>
+  </data>
+  <!-- Meeting State Validation Messages -->
+  <data name="MeetingScheduledValidationMessage" xml:space="preserve">
+    <value>Meeting is scheduled and can be started, edited, cancelled, or postponed.</value>
+  </data>
+  <data name="MeetingNotifyAttendeesMessage" xml:space="preserve">
+    <value>Ensure all attendees are notified of any changes.</value>
+  </data>
+  <data name="MeetingInProgressValidationMessage" xml:space="preserve">
+    <value>Meeting is currently in progress.</value>
+  </data>
+  <data name="MeetingLiveFeaturesMessage" xml:space="preserve">
+    <value>Live meeting features (notes, attendance, attachments) are available.</value>
+  </data>
+  <data name="MeetingFinishedValidationMessage" xml:space="preserve">
+    <value>Meeting has been completed and cannot be modified.</value>
+  </data>
+  <data name="MeetingMinutesCanBeCreatedMessage" xml:space="preserve">
+    <value>Meeting minutes can be created and circulated for signature.</value>
+  </data>
+  <data name="MeetingCancelledValidationMessage" xml:space="preserve">
+    <value>Meeting has been cancelled and cannot be modified.</value>
+  </data>
+  <data name="MeetingPostponedValidationMessage" xml:space="preserve">
+    <value>Meeting has been postponed and can be rescheduled.</value>
+  </data>
+  <data name="MeetingRescheduleMessage" xml:space="preserve">
+    <value>Update the meeting date and time to reschedule.</value>
+ 
   <!-- Assessment Status Localization -->
   <data name="AssessmentStatusDraft" xml:space="preserve">
     <value>Draft</value>
@@ -1370,5 +1466,6 @@ You should add board members to be able to perform fund activities, at least 2 i
   </data>
   <data name="QuestionTypeText" xml:space="preserve">
     <value>Text</value>
+ 
   </data>
 </root>

@@ -3,7 +3,9 @@ using Abstraction.Contract.Repository.Notifications;
 using Abstraction.Contracts.Repository.Products;
 using Abstraction.Contracts.Repository.Fund;
 using Abstraction.Contracts.Repository.Resolution;
+using Abstraction.Contract.Repository.Meeting;
 using Abstraction.Contract.Repository.AssessmentManagement;
+ 
 
 namespace Abstraction.Contracts.Repository
 {
@@ -29,10 +31,17 @@ namespace Abstraction.Contracts.Repository
         IResolutionStatusHistoryRepository ResolutionStatusHistory { get; }
         IResolutionVoteRepository ResolutionVotes { get; }
 
+ 
+        // Meeting Management
+        IMeetingTimeProposalRepository MeetingTimeProposals { get; }
+        IMeetingTimeVoteRepository MeetingTimeVotes { get; }
+        IMeetingStatusHistoryRepository MeetingStatusHistory { get; }
+ 
         // Assessment Management
         IAssessmentRepository Assessments { get; }
         IAssessmentQuestionRepository AssessmentQuestions { get; }
         IAssessmentResponseRepository AssessmentResponses { get; }
         IAnswerRepository Answers { get; }
+ 
     }
 }
