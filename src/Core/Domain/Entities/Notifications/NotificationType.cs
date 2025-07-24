@@ -28,6 +28,14 @@ namespace Domain.Entities.Notifications
         UserRelieveOfDuties = 18, // MSG-EDIT-013 - User relieve of duties notification
         UserRoleUpdate = 19, // MSG-EDIT-014 - User role update notification
         SessionActivityReminder = 20,
-        SessionExpiredReminder = 21
+        SessionExpiredReminder = 21,
+
+        // Assessment Notifications
+        AssessmentSubmittedForApproval = 22, // MSG002 - Assessment submitted for approval notification
+        AssessmentApproved = 23, // MSG002 - Assessment approved notification
+        AssessmentRejected = 24, // MSG004 - Assessment rejected notification
+        AssessmentDistributed = 25, // MSG002 - Assessment distributed to board members notification
+        AssessmentResponseSubmitted = 26, // MSG002 - Assessment response submitted notification
+        AssessmentCompleted = 27 // MSG002 - Assessment completed notification
     }
 }
