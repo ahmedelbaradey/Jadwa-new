@@ -3,6 +3,7 @@ using Abstraction.Contract.Repository.Notifications;
 using Abstraction.Contracts.Repository.Products;
 using Abstraction.Contracts.Repository.Fund;
 using Abstraction.Contracts.Repository.Resolution;
+using Abstraction.Contract.Repository.Meeting;
 
 namespace Abstraction.Contracts.Repository
 {
@@ -27,5 +28,10 @@ namespace Abstraction.Contracts.Repository
         IResolutionItemConflictRepository ResolutionItemConflicts { get; }
         IResolutionStatusHistoryRepository ResolutionStatusHistory { get; }
         IResolutionVoteRepository ResolutionVotes { get; }
+
+        // Meeting Management
+        IMeetingTimeProposalRepository MeetingTimeProposals { get; }
+        IMeetingTimeVoteRepository MeetingTimeVotes { get; }
+        IMeetingStatusHistoryRepository MeetingStatusHistory { get; }
     }
 }

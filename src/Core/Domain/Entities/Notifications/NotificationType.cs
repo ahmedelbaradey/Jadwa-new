@@ -28,6 +28,10 @@ namespace Domain.Entities.Notifications
         UserRelieveOfDuties = 18, // MSG-EDIT-013 - User relieve of duties notification
         UserRoleUpdate = 19, // MSG-EDIT-014 - User role update notification
         SessionActivityReminder = 20,
-        SessionExpiredReminder = 21
+        SessionExpiredReminder = 21,
+
+        // Meeting Management Notifications
+        MeetingTimeProposalCreated = 22, // MSG-MTV-NOT-01 - New meeting time proposal created
+        MeetingTimeVotingCompleted = 23  // MSG-VMT-NOT-01 - Meeting time voting completed
     }
 }

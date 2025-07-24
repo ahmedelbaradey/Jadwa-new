@@ -7,11 +7,13 @@ using Abstraction.Contracts.Repository;
 using Abstraction.Contracts.Repository.Fund;
 using Abstraction.Contracts.Repository.Products;
 using Abstraction.Contracts.Repository.Resolution;
+using Abstraction.Contract.Repository.Meeting;
 using Domain.Entities.ResolutionManagement;
 using Infrastructure.Data;
 using Infrastructure.Repository.Fund;
 using Infrastructure.Repository.Notifications;
 using Infrastructure.Repository.Resolution;
+using Infrastructure.Repository.Meeting;
 using Microsoft.Extensions.Localization;
 using Repository.Catalog;
 using Resources;
@@ -40,6 +42,11 @@ namespace Infrastructure.Repository
         private readonly Lazy<IResolutionTypeRepository> _iResolutionTypeRepository;
         private readonly Lazy<IResolutionVoteRepository> _iResolutionVoteRepository;
         private readonly Lazy<IResolutionStatusHistoryRepository> _iResolutionStatusHistoryRepository;
+
+        // Meeting Management
+        private readonly Lazy<IMeetingTimeProposalRepository> _iMeetingTimeProposalRepository;
+        private readonly Lazy<IMeetingTimeVoteRepository> _iMeetingTimeVoteRepository;
+        private readonly Lazy<IMeetingStatusHistoryRepository> _iMeetingStatusHistoryRepository;
         private readonly INotificationLocalizationService _localizationService;
         private readonly ILoggerManager _logger; // Optional logger for logging errors and warnings
  
@@ -72,6 +79,11 @@ namespace Infrastructure.Repository
             _iResolutionTypeRepository = new Lazy<IResolutionTypeRepository>(() => new ResolutionTypeRepository(repositoryContext, currentUserService));
             _iResolutionVoteRepository = new Lazy<IResolutionVoteRepository>(() => new ResolutionVoteRepository(repositoryContext, currentUserService));
             _iResolutionStatusHistoryRepository = new Lazy<IResolutionStatusHistoryRepository>(() =>  new ResolutionStatusHistoryRepository(repositoryContext, currentUserService));
+
+            // Meeting Management
+            _iMeetingTimeProposalRepository = new Lazy<IMeetingTimeProposalRepository>(() => new MeetingTimeProposalRepository(repositoryContext, currentUserService));
+            _iMeetingTimeVoteRepository = new Lazy<IMeetingTimeVoteRepository>(() => new MeetingTimeVoteRepository(repositoryContext, currentUserService));
+            _iMeetingStatusHistoryRepository = new Lazy<IMeetingStatusHistoryRepository>(() => new MeetingStatusHistoryRepository(repositoryContext, currentUserService));
         }
 
         public ICategoryRepository Categories => _iCategpryRepository.Value;
@@ -94,5 +106,9 @@ namespace Infrastructure.Repository
 
         public IResolutionVoteRepository ResolutionVotes => _iResolutionVoteRepository.Value;
         public IResolutionStatusHistoryRepository ResolutionStatusHistory => _iResolutionStatusHistoryRepository.Value;
+
+        public IMeetingTimeProposalRepository MeetingTimeProposals => _iMeetingTimeProposalRepository.Value;
+        public IMeetingTimeVoteRepository MeetingTimeVotes => _iMeetingTimeVoteRepository.Value;
+        public IMeetingStatusHistoryRepository MeetingStatusHistory => _iMeetingStatusHistoryRepository.Value;
     }
 }
