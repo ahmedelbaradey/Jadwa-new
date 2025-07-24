@@ -72,22 +72,4 @@ namespace Domain.Entities.AssessmentManagement
         public virtual User? CreatedByUser { get; set; }
     }
 
-    /// <summary>
-    /// Enum for assessment actions for audit logging
-    /// Matches the AssessmentActionEnum in AssessmentStateContext
-    /// </summary>
-    public enum AssessmentActionEnum
-    {
-        Creation = 1,
-        Submission = 2,
-        Approval = 3,
-        Rejection = 4,
-        Distribution = 5,
-        ResponseSubmission = 6,
-        Completion = 7,
-        StatusChange = 8,
-        Edit = 9,
-        Delete = 10,
-        Archive = 11
-    }
-}
+

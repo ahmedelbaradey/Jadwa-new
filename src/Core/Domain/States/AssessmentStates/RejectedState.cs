@@ -63,18 +63,18 @@ namespace Domain.States.AssessmentStates
 
         /// <summary>
         /// Gets the available actions for Rejected state
-        /// Actions will be localized by the AssessmentStateContext
+        /// Returns AssessmentActionEnum values for consistency with Resolution pattern
         /// </summary>
-        /// <returns>List of available action keys</returns>
-        public override List<string> GetAvailableActions()
+        /// <returns>List of available action enums</returns>
+        public override List<AssessmentActionEnum> GetAvailableActions()
         {
-            return new List<string>
+            return new List<AssessmentActionEnum>
             {
-                "View Details",
-                "View Rejection Reason",
-                "Edit",
-                "Resubmit",
-                "Delete"
+                AssessmentActionEnum.ViewDetails,
+                AssessmentActionEnum.ViewRejectionReason,
+                AssessmentActionEnum.Edit,
+                AssessmentActionEnum.Resubmit,
+                AssessmentActionEnum.Delete
             };
         }
 

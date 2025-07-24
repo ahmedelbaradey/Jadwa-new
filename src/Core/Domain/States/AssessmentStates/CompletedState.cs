@@ -84,19 +84,19 @@ namespace Domain.States.AssessmentStates
 
         /// <summary>
         /// Gets the available actions for Completed state
-        /// Actions will be localized by the AssessmentStateContext
+        /// Returns AssessmentActionEnum values for consistency with Resolution pattern
         /// </summary>
-        /// <returns>List of available action keys</returns>
-        public override List<string> GetAvailableActions()
+        /// <returns>List of available action enums</returns>
+        public override List<AssessmentActionEnum> GetAvailableActions()
         {
-            return new List<string>
+            return new List<AssessmentActionEnum>
             {
-                "View Details",
-                "View Results",
-                "View Responses",
-                "Export Results",
-                "Export Data",
-                "Archive"
+                AssessmentActionEnum.ViewDetails,
+                AssessmentActionEnum.ViewResults,
+                AssessmentActionEnum.ViewResponses,
+                AssessmentActionEnum.ExportResults,
+                AssessmentActionEnum.ExportData,
+                AssessmentActionEnum.Archive
             };
         }
 

@@ -1,20 +1,22 @@
 using Domain.Entities.AssessmentManagement;
+using Microsoft.Extensions.Localization;
+using Resources;
 
 namespace Domain.States.AssessmentStates
 {
     /// <summary>
     /// Factory class for creating assessment state instances
-    /// Implements Factory Design Pattern for state creation
-    /// Based on Fund state factory implementation
+    /// Implements the Factory pattern for state management
+    /// Follows the exact structure and patterns of ResolutionStateFactory
     /// </summary>
     public static class AssessmentStateFactory
     {
         /// <summary>
-        /// Creates an assessment state instance based on the provided status
+        /// Creates an assessment state instance based on the status enum
         /// </summary>
-        /// <param name="status">The assessment status</param>
-        /// <returns>The corresponding state instance</returns>
-        /// <exception cref="ArgumentException">Thrown when an invalid status is provided</exception>
+        /// <param name="status">The assessment status enum value</param>
+        /// <returns>Appropriate IAssessmentState implementation</returns>
+        /// <exception cref="ArgumentException">Thrown when status is not supported</exception>
         public static IAssessmentState CreateState(AssessmentStatus status)
         {
             return status switch
@@ -25,40 +27,40 @@ namespace Domain.States.AssessmentStates
                 AssessmentStatus.Rejected => new RejectedState(),
                 AssessmentStatus.Active => new ActiveState(),
                 AssessmentStatus.Completed => new CompletedState(),
-                _ => throw new ArgumentException($"Invalid assessment status: {status}", nameof(status))
+                _ => throw new ArgumentException($"Unsupported assessment status: {status}", nameof(status))
             };
         }
 
         /// <summary>
-        /// Gets the initial state for a new assessment based on the action
+        /// Gets the default initial state for a new assessment
         /// </summary>
-        /// <param name="isDraft">True if saving as draft, false if submitting for approval</param>
-        /// <returns>The initial state instance</returns>
-        public static IAssessmentState GetInitialState(bool isDraft = true)
+        /// <param name="saveAsDraft">Whether the assessment is being saved as draft</param>
+        /// <returns>Initial assessment state (Draft)</returns>
+        public static IAssessmentState GetInitialState(bool saveAsDraft = true)
         {
-            return isDraft ? new DraftState() : new WaitingForApprovalState();
+            return new DraftState();
         }
 
         /// <summary>
-        /// Validates if a transition from one status to another is allowed
+        /// Validates if a transition from current status to target status is allowed
         /// </summary>
-        /// <param name="fromStatus">Current status</param>
-        /// <param name="toStatus">Target status</param>
-        /// <returns>True if transition is allowed, false otherwise</returns>
-        public static bool IsTransitionAllowed(AssessmentStatus fromStatus, AssessmentStatus toStatus)
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <param name="targetStatus">Target assessment status</param>
+        /// <returns>True if transition is allowed</returns>
+        public static bool CanTransitionTo(AssessmentStatus currentStatus, AssessmentStatus targetStatus)
         {
-            var currentState = CreateState(fromStatus);
-            return currentState.CanTransitionTo(toStatus);
+            var currentState = CreateState(currentStatus);
+            return currentState.CanTransitionTo(targetStatus);
         }
 
         /// <summary>
         /// Gets all allowed transitions from a given status
         /// </summary>
-        /// <param name="status">Current status</param>
-        /// <returns>List of allowed target statuses</returns>
-        public static List<AssessmentStatus> GetAllowedTransitions(AssessmentStatus status)
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>Collection of allowed target statuses</returns>
+        public static IEnumerable<AssessmentStatus> GetAllowedTransitions(AssessmentStatus currentStatus)
         {
-            var currentState = CreateState(status);
+            var currentState = CreateState(currentStatus);
             return currentState.GetAllowedTransitions();
         }
 
@@ -66,8 +68,8 @@ namespace Domain.States.AssessmentStates
         /// Gets available actions for a given status
         /// </summary>
         /// <param name="status">Current status</param>
-        /// <returns>List of available actions</returns>
-        public static List<string> GetAvailableActions(AssessmentStatus status)
+        /// <returns>List of available action enums</returns>
+        public static List<AssessmentActionEnum> GetAvailableActions(AssessmentStatus status)
         {
             var currentState = CreateState(status);
             return currentState.GetAvailableActions();
@@ -77,11 +79,12 @@ namespace Domain.States.AssessmentStates
         /// Validates an assessment against its current state business rules
         /// </summary>
         /// <param name="assessment">The assessment to validate</param>
+        /// <param name="localizer">String localizer for localized messages</param>
         /// <returns>Validation result with success status and messages</returns>
-        public static (bool IsValid, List<string> ValidationMessages) ValidateAssessment(Assessment assessment)
+        public static (bool IsValid, List<string> ValidationMessages) ValidateAssessment(Assessment assessment, IStringLocalizer<SharedResources> localizer)
         {
             var currentState = CreateState(assessment.Status);
-            return currentState.ValidateState(assessment);
+            return currentState.ValidateState(assessment, localizer);
         }
 
         /// <summary>
@@ -96,33 +99,73 @@ namespace Domain.States.AssessmentStates
         }
 
         /// <summary>
-        /// Checks if a status allows editing
+        /// Validates if editing is allowed for the current status
         /// </summary>
-        /// <param name="status">Status to check</param>
-        /// <returns>True if editing is allowed, false otherwise</returns>
-        public static bool AllowsEditing(AssessmentStatus status)
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>True if editing is allowed</returns>
+        public static bool CanEdit(AssessmentStatus currentStatus)
         {
-            return status == AssessmentStatus.Draft || status == AssessmentStatus.Rejected;
+            return currentStatus switch
+            {
+                AssessmentStatus.Draft => true,
+                AssessmentStatus.Rejected => true,
+                _ => false
+            };
         }
 
         /// <summary>
-        /// Checks if a status allows distribution
+        /// Validates if completion operations are allowed for the current status
         /// </summary>
-        /// <param name="status">Status to check</param>
-        /// <returns>True if distribution is allowed, false otherwise</returns>
-        public static bool AllowsDistribution(AssessmentStatus status)
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>True if completion is allowed</returns>
+        public static bool CanComplete(AssessmentStatus currentStatus)
         {
-            return status == AssessmentStatus.Approved;
+            return currentStatus == AssessmentStatus.Active;
         }
 
         /// <summary>
-        /// Checks if a status allows responses
+        /// Validates if deletion is allowed for the current status
         /// </summary>
-        /// <param name="status">Status to check</param>
-        /// <returns>True if responses are allowed, false otherwise</returns>
-        public static bool AllowsResponses(AssessmentStatus status)
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>True if deletion is allowed</returns>
+        public static bool CanDelete(AssessmentStatus currentStatus)
         {
-            return status == AssessmentStatus.Active;
+            return currentStatus switch
+            {
+                AssessmentStatus.Draft => true,
+                AssessmentStatus.Rejected => true,
+                _ => false
+            };
+        }
+
+        /// <summary>
+        /// Validates if approval operations are allowed for the current status
+        /// </summary>
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>True if approval is allowed</returns>
+        public static bool CanApprove(AssessmentStatus currentStatus)
+        {
+            return currentStatus == AssessmentStatus.WaitingForApproval;
+        }
+
+        /// <summary>
+        /// Validates if rejection operations are allowed for the current status
+        /// </summary>
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>True if rejection is allowed</returns>
+        public static bool CanReject(AssessmentStatus currentStatus)
+        {
+            return currentStatus == AssessmentStatus.WaitingForApproval;
+        }
+
+        /// <summary>
+        /// Validates if distribution operations are allowed for the current status
+        /// </summary>
+        /// <param name="currentStatus">Current assessment status</param>
+        /// <returns>True if distribution is allowed</returns>
+        public static bool CanDistribute(AssessmentStatus currentStatus)
+        {
+            return currentStatus == AssessmentStatus.Approved;
         }
     }
 }

@@ -48,8 +48,8 @@ namespace Domain.States.AssessmentStates
         /// <summary>
         /// Gets the available actions for the current state
         /// </summary>
-        /// <returns>List of available actions</returns>
-        List<string> GetAvailableActions();
+        /// <returns>List of available action enums</returns>
+        List<AssessmentActionEnum> GetAvailableActions();
 
         /// <summary>
         /// Handles state-specific logic

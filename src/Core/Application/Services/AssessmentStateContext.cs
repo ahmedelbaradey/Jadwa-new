@@ -4,6 +4,8 @@ using Microsoft.Extensions.Localization;
 using Resources;
 using Abstraction.Contract.Service;
 using Abstraction.Contracts.Repository;
+using Abstraction.Constants;
+using Domain.Entities.FundManagement;
 
 namespace Application.Services
 {
@@ -42,9 +44,9 @@ namespace Application.Services
         /// <param name="localizationKey">Localization key for the action</param>
         /// <param name="sendNotifications">Whether to send notifications for this transition</param>
         /// <returns>True if transition was successful, false otherwise</returns>
-        public bool ChangeStatusWithAudit(
+        public async Task<bool> ChangeStatusWithAudit(
             IAssessmentState newState,
-            Domain.Entities.AssessmentManagement.AssessmentActionEnum action,
+            AssessmentActionEnum action,
             string actionDetails,
             string localizationKey,
             bool sendNotifications = true)
@@ -68,7 +70,7 @@ namespace Application.Services
                     _assessment.Status = newStatus;
 
                     // Add comprehensive audit entry
-                    AddAuditEntry(action, actionDetails, localizationKey, currentStatus, newStatus);
+                    await AddAuditEntry(action, actionDetails, localizationKey, currentStatus, newStatus);
 
                     // Send notifications if requested
                     if (sendNotifications)
@@ -130,7 +132,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="reviewerComments">Optional reviewer comments</param>
         /// <returns>True if assessment was approved, false otherwise</returns>
-        public bool TryApproveAssessment(string reviewerComments = null)
+        public async Task<bool> TryApproveAssessment(string reviewerComments = null)
         {
             try
             {
@@ -141,9 +143,9 @@ namespace Application.Services
                     _assessment.ReviewedBy = _currentUserService.UserId;
                     _assessment.ReviewedDate = DateTime.UtcNow;
 
-                    return ChangeStatusWithAudit(
+                    return await ChangeStatusWithAudit(
                         approvedState,
-                        Domain.Entities.AssessmentManagement.AssessmentActionEnum.Approval,
+                        AssessmentActionEnum.Approval,
                         _localizer[SharedResourcesKey.AssessmentApproved],
                         SharedResourcesKey.AssessmentApproved,
                         sendNotifications: true
@@ -163,7 +165,7 @@ namespace Application.Services
         /// </summary>
         /// <param name="rejectionReason">Reason for rejection</param>
         /// <returns>True if assessment was rejected, false otherwise</returns>
-        public bool TryRejectAssessment(string rejectionReason)
+        public async Task<bool> TryRejectAssessment(string rejectionReason)
         {
             try
             {
@@ -174,9 +176,9 @@ namespace Application.Services
                     _assessment.ReviewedBy = _currentUserService.UserId;
                     _assessment.ReviewedDate = DateTime.UtcNow;
 
-                    return ChangeStatusWithAudit(
+                    return await ChangeStatusWithAudit(
                         rejectedState,
-                        Domain.Entities.AssessmentManagement.AssessmentActionEnum.Rejection,
+                        AssessmentActionEnum.Rejection,
                         _localizer[SharedResourcesKey.AssessmentRejected],
                         SharedResourcesKey.AssessmentRejected,
                         sendNotifications: true
@@ -195,16 +197,16 @@ namespace Application.Services
         /// Distributes assessment to board members
         /// </summary>
         /// <returns>True if assessment was distributed, false otherwise</returns>
-        public bool TryDistributeAssessment()
+        public async Task<bool> TryDistributeAssessment()
         {
             try
             {
                 if (_assessment.Status == AssessmentStatus.Approved)
                 {
                     var activeState = new ActiveState();
-                    return ChangeStatusWithAudit(
+                    return await ChangeStatusWithAudit(
                         activeState,
-                        Domain.Entities.AssessmentManagement.AssessmentActionEnum.Distribution,
+                        AssessmentActionEnum.Distribution,
                         _localizer[SharedResourcesKey.AssessmentDistributed],
                         SharedResourcesKey.AssessmentDistributed,
                         sendNotifications: true
@@ -224,13 +226,16 @@ namespace Application.Services
         /// <summary>
         /// Adds comprehensive audit entry following ResolutionStateContext pattern
         /// </summary>
-        private void AddAuditEntry(Domain.Entities.AssessmentManagement.AssessmentActionEnum action, string actionDetails, string localizationKey,
+        private async Task AddAuditEntry(AssessmentActionEnum action, string actionDetails, string localizationKey,
             AssessmentStatus oldStatus, AssessmentStatus newStatus)
         {
             try
             {
                 // Initialize collection if null
                 _assessment.StatusHistories ??= new List<AssessmentStatusHistory>();
+
+                // Get user role following Resolution pattern
+                var userRole = await GetCurrentUserRole();
 
                 // Create comprehensive status history entry with all required audit fields
                 var statusHistory = new AssessmentStatusHistory
@@ -251,7 +256,7 @@ namespace Application.Services
                     Notes = localizationKey,
 
                     // User context information
-                    UserRole = GetCurrentUserRole(),
+                    UserRole = userRole.ToString(),
                     CreatedBy = _currentUserService.UserId,
 
                     // Status transition information (for status changes)
@@ -271,19 +276,78 @@ namespace Application.Services
         }
 
         /// <summary>
-        /// Gets the current user role for audit logging
+        /// Gets the current user role for audit logging following Resolution module pattern
+        /// Determines the current user's role within the specific fund context
+        /// Checks FundBoardSecretary table, Fund.LegalCouncilId field, and FundManager table
         /// </summary>
-        private string GetCurrentUserRole()
+        private async Task<Roles> GetCurrentUserRole()
         {
-            // This would typically get the user's role from the current user service
-            // For now, return a default value
-            return _currentUserService.UserRole ?? "User";
+            try
+            {
+                var currentUserId = _currentUserService.UserId;
+                if (!currentUserId.HasValue)
+                {
+                    return Roles.None;
+                }
+
+                // Get fund details with all related entities
+                var fundDetails = await _repository.Funds.ViewFundUsers(_assessment.FundId, trackChanges: false);
+                if (fundDetails == null)
+                {
+                    return Roles.None;
+                }
+
+                var userRole = Roles.None;
+
+                // 1. Check if user is Legal Council for the fund
+                if (fundDetails.LegalCouncilId == currentUserId.Value)
+                {
+                    userRole = Roles.LegalCouncil;
+                }
+
+                // 2. Check if user is a Fund Manager for the fund
+                if (fundDetails.FundManagers != null && fundDetails.FundManagers.Count > 0)
+                {
+                    var isFundManager = fundDetails.FundManagers.Any(fm => fm.UserId == currentUserId.Value);
+                    if (isFundManager)
+                    {
+                        userRole = Roles.FundManager;
+                    }
+                }
+
+                // 3. Check if user is a Board Secretary for the fund
+                if (fundDetails.FundBoardSecretaries != null && fundDetails.FundBoardSecretaries.Count > 0)
+                {
+                    var isBoardSecretary = fundDetails.FundBoardSecretaries.Any(bs => bs.UserId == currentUserId.Value);
+                    if (isBoardSecretary)
+                    {
+                        userRole = Roles.BoardSecretary;
+                    }
+                }
+
+                // 4. Check if user is a Board Member for the fund
+                if (fundDetails.BoardMembers != null && fundDetails.BoardMembers.Count > 0)
+                {
+                    var isBoardMember = fundDetails.BoardMembers.Any(bm => bm.UserId == currentUserId.Value);
+                    if (isBoardMember)
+                    {
+                        userRole = Roles.BoardMember;
+                    }
+                }
+
+                return userRole;
+            }
+            catch (Exception)
+            {
+                // Log error but don't throw to avoid breaking the main operation
+                return Roles.None;
+            }
         }
 
         /// <summary>
         /// Sends notifications for state transitions following Resolution module patterns
         /// </summary>
-        private async Task SendStateTransitionNotifications(Domain.Entities.AssessmentManagement.AssessmentActionEnum action,
+        private async Task SendStateTransitionNotifications(AssessmentActionEnum action,
             AssessmentStatus oldStatus, AssessmentStatus newStatus)
         {
             try
@@ -295,19 +359,19 @@ namespace Application.Services
 
                 switch (action)
                 {
-                    case Domain.Entities.AssessmentManagement.AssessmentActionEnum.Submission:
+                    case AssessmentActionEnum.Submission:
                         await AddSubmissionNotifications(notifications, fund);
                         break;
-                    case Domain.Entities.AssessmentManagement.AssessmentActionEnum.Approval:
+                    case AssessmentActionEnum.Approval:
                         await AddApprovalNotifications(notifications, fund);
                         break;
-                    case Domain.Entities.AssessmentManagement.AssessmentActionEnum.Rejection:
+                    case AssessmentActionEnum.Rejection:
                         await AddRejectionNotifications(notifications, fund);
                         break;
-                    case Domain.Entities.AssessmentManagement.AssessmentActionEnum.Distribution:
+                    case AssessmentActionEnum.Distribution:
                         await AddDistributionNotifications(notifications, fund);
                         break;
-                    case Domain.Entities.AssessmentManagement.AssessmentActionEnum.Completion:
+                    case AssessmentActionEnum.Completion:
                         await AddCompletionNotifications(notifications, fund);
                         break;
                 }
@@ -324,32 +388,42 @@ namespace Application.Services
         }
 
         /// <summary>
-        /// Gets localized action name
+        /// Gets localized action name from AssessmentActionEnum
         /// </summary>
-        private string GetLocalizedActionName(string action)
+        private string GetLocalizedActionName(AssessmentActionEnum action)
         {
             return action switch
             {
-                "Submit for Approval" => _localizer[SharedResourcesKey.AssessmentSubmitForApproval],
-                "Approve" => _localizer[SharedResourcesKey.AssessmentApprove],
-                "Reject" => _localizer[SharedResourcesKey.AssessmentReject],
-                "Distribute" => _localizer[SharedResourcesKey.AssessmentDistribute],
-                "Complete" => _localizer[SharedResourcesKey.AssessmentComplete],
-                "Edit" => _localizer[SharedResourcesKey.AssessmentEdit],
-                "View Details" => _localizer[SharedResourcesKey.AssessmentViewDetails],
-                "Delete" => _localizer[SharedResourcesKey.AssessmentDelete],
-                "Save" => _localizer[SharedResourcesKey.AssessmentSave],
-                "Respond" => _localizer[SharedResourcesKey.AssessmentRespond],
-                "View Rejection Reason" => _localizer[SharedResourcesKey.AssessmentViewRejectionReason],
-                "Resubmit" => _localizer[SharedResourcesKey.AssessmentResubmit],
-                "View Responses" => _localizer[SharedResourcesKey.AssessmentViewResponses],
-                "View Results" => _localizer[SharedResourcesKey.AssessmentViewResults],
-                "Complete Assessment" => _localizer[SharedResourcesKey.AssessmentCompleteAssessment],
-                "Export Results" => _localizer[SharedResourcesKey.AssessmentExportResults],
-                "Export Data" => _localizer[SharedResourcesKey.AssessmentExportData],
-                "Archive" => _localizer[SharedResourcesKey.AssessmentArchive],
-                _ => action
+                AssessmentActionEnum.Submission => _localizer[SharedResourcesKey.AssessmentSubmitForApproval],
+                AssessmentActionEnum.Approval => _localizer[SharedResourcesKey.AssessmentApprove],
+                AssessmentActionEnum.Rejection => _localizer[SharedResourcesKey.AssessmentReject],
+                AssessmentActionEnum.Distribution => _localizer[SharedResourcesKey.AssessmentDistribute],
+                AssessmentActionEnum.Completion => _localizer[SharedResourcesKey.AssessmentComplete],
+                AssessmentActionEnum.Edit => _localizer[SharedResourcesKey.AssessmentEdit],
+                AssessmentActionEnum.ViewDetails => _localizer[SharedResourcesKey.AssessmentViewDetails],
+                AssessmentActionEnum.Delete => _localizer[SharedResourcesKey.AssessmentDelete],
+                AssessmentActionEnum.Save => _localizer[SharedResourcesKey.AssessmentSave],
+                AssessmentActionEnum.Respond => _localizer[SharedResourcesKey.AssessmentRespond],
+                AssessmentActionEnum.ViewRejectionReason => _localizer[SharedResourcesKey.AssessmentViewRejectionReason],
+                AssessmentActionEnum.Resubmit => _localizer[SharedResourcesKey.AssessmentResubmit],
+                AssessmentActionEnum.ViewResponses => _localizer[SharedResourcesKey.AssessmentViewResponses],
+                AssessmentActionEnum.ViewResults => _localizer[SharedResourcesKey.AssessmentViewResults],
+                AssessmentActionEnum.CompleteAssessment => _localizer[SharedResourcesKey.AssessmentCompleteAssessment],
+                AssessmentActionEnum.ExportResults => _localizer[SharedResourcesKey.AssessmentExportResults],
+                AssessmentActionEnum.ExportData => _localizer[SharedResourcesKey.AssessmentExportData],
+                AssessmentActionEnum.Archive => _localizer[SharedResourcesKey.AssessmentArchive],
+                _ => action.ToString()
             };
+        }
+
+        /// <summary>
+        /// Gets localized available actions for the current assessment state
+        /// </summary>
+        /// <returns>List of localized action names</returns>
+        public List<string> GetLocalizedAvailableActions()
+        {
+            var actions = _assessment.CurrentState.GetAvailableActions();
+            return actions.Select(action => GetLocalizedActionName(action)).ToList();
         }
 
         /// <summary>

@@ -97,17 +97,16 @@ namespace Domain.States.AssessmentStates
 
         /// <summary>
         /// Gets the available actions for Approved state
+        /// Returns AssessmentActionEnum values for consistency with Resolution pattern
         /// </summary>
-        /// <returns>List of available actions</returns>
-        public override List<string> GetAvailableActions()
+        /// <returns>List of available action enums</returns>
+        public override List<AssessmentActionEnum> GetAvailableActions()
         {
-            var isArabic = CultureInfo.CurrentCulture.Name.StartsWith("ar");
-            
-            return new List<string>
+            return new List<AssessmentActionEnum>
             {
-                isArabic ? "عرض التفاصيل" : "View Details",
-                isArabic ? "توزيع" : "Distribute",
-                isArabic ? "تصدير" : "Export"
+                AssessmentActionEnum.ViewDetails,
+                AssessmentActionEnum.Distribution,
+                AssessmentActionEnum.ExportResults
             };
         }
 

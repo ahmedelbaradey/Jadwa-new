@@ -73,8 +73,8 @@ namespace Domain.States.AssessmentStates
         /// Gets the available actions for the current state
         /// Must be implemented by concrete state classes
         /// </summary>
-        /// <returns>List of available actions</returns>
-        public abstract List<string> GetAvailableActions();
+        /// <returns>List of available action enums</returns>
+        public abstract List<AssessmentActionEnum> GetAvailableActions();
 
         /// <summary>
         /// Handles state-specific logic

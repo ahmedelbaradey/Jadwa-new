@@ -85,17 +85,17 @@ namespace Domain.States.AssessmentStates
 
         /// <summary>
         /// Gets the available actions for Draft state
-        /// Actions will be localized by the AssessmentStateContext
+        /// Returns AssessmentActionEnum values for consistency with Resolution pattern
         /// </summary>
-        /// <returns>List of available action keys</returns>
-        public override List<string> GetAvailableActions()
+        /// <returns>List of available action enums</returns>
+        public override List<AssessmentActionEnum> GetAvailableActions()
         {
-            return new List<string>
+            return new List<AssessmentActionEnum>
             {
-                "Edit",
-                "Save",
-                "Submit for Approval",
-                "Delete"
+                AssessmentActionEnum.Edit,
+                AssessmentActionEnum.Save,
+                AssessmentActionEnum.Submission,
+                AssessmentActionEnum.Delete
             };
         }
 
