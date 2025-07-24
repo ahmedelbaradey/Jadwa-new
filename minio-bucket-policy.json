@@ -1,0 +1,35 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::jadwa-files/*",
+        "arn:aws:s3:::fund/*",
+        "arn:aws:s3:::user/*",
+        "arn:aws:s3:::other/*"
+      ]
+    },
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": ["*"]
+      },
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::jadwa-files",
+        "arn:aws:s3:::fund",
+        "arn:aws:s3:::user",
+        "arn:aws:s3:::other"
+      ]
+    }
+  ]
+}

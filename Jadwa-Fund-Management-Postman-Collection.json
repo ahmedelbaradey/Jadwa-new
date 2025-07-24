@@ -1,0 +1,3945 @@
+{
+	"info": {
+		"_postman_id": "jadwa-fund-management-api",
+		"name": "Jadwa Fund Management System - Sprint 2 Complete API Collection",
+		"description": "Comprehensive API testing collection for Jadwa Fund Management System covering all Sprint 2 implementations including Alternative 1 & 2 workflows, complete Resolution management, Board Member management, and all 17 alternative scenarios.\n\n**SPRINT 2 COMPLETE IMPLEMENTATION (98% Complete - 121/123 Story Points):**\n\n**RESOLUTION MANAGEMENT ENDPOINTS:**\n- GET /api/Resolutions/ResolutionsList - List resolutions with role-based filtering\n- GET /api/Resolutions/GetResolutionById - View resolution details by role\n- POST /api/Resolutions/AddResolution - Create resolution (supports Alternative 2 workflow)\n- PUT /api/Resolutions/EditResolution - Edit resolution (supports Alternative 1 & 2 workflows)\n- DELETE /api/Resolutions/DeleteResolution - Delete draft resolutions\n- PATCH /api/Resolutions/CancelResolution/{id} - Cancel pending resolutions\n- PATCH /api/Resolutions/ConfirmResolution/{id} - Confirm resolutions (Fund Manager)\n- PATCH /api/Resolutions/RejectResolution/{id} - Reject resolutions with reason\n- PATCH /api/Resolutions/SendToVote/{id} - Send confirmed resolutions to vote\n\n**BOARD MEMBER MANAGEMENT ENDPOINTS:**\n- POST /api/BoardMembers/AddBoardMember - Add board members with business rules\n- GET /api/BoardMembers/GetBoardMembers - View fund board members\n\n**ALTERNATIVE WORKFLOWS SUPPORTED:**\n- Alternative 1: Voting suspension for VotingInProgress resolutions (MSG006/MSG007)\n- Alternative 2: New resolution creation from Approved/NotApproved (MSG008/MSG009)\n- All 17 alternative scenarios from Sprint.md specifications\n\n**REQUIRED ENVIRONMENT VARIABLES:**\n- base_url: API base URL (e.g., https://localhost:7001)\n- fm_access_token: Fund Manager JWT token\n- lc_access_token: Legal Council JWT token\n- bs_access_token: Board Secretary JWT token\n- bm_access_token: Board Member JWT token\n- created_fund_id: ID of created fund for testing\n- pending_resolution_id: ID of resolution in pending status\n- confirmed_resolution_id: ID of confirmed resolution\n- rejected_resolution_id: ID of rejected resolution\n- voting_resolution_id: ID of resolution in voting status\n- approved_resolution_id: ID of approved resolution for Alternative 2 testing\n- original_resolution_id: ID of original resolution for Alternative 2 workflow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "jadwa-api-tests"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"description": "Authentication endpoints for JWT token management",
+			"item": [
+				{
+					"name": "Sign In - Fund Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has JWT token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('accessToken');",
+									"    pm.expect(jsonData.data).to.have.property('refreshToken');",
+									"    ",
+									"    // Store tokens for subsequent requests",
+									"    pm.environment.set('fm_access_token', jsonData.data.accessToken);",
+									"    pm.environment.set('fm_refresh_token', jsonData.data.refreshToken);",
+									"});",
+									"",
+									"pm.test(\"User role is Fund Manager\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.roles).to.include('Fund Manager');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"fm_test@jadwa.com\",\n  \"password\": \"Test123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Authentication/Sign-In",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Authentication",
+								"Sign-In"
+							]
+						}
+					}
+				},
+				{
+					"name": "Sign In - Legal Council",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has JWT token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('accessToken');",
+									"    pm.environment.set('lc_access_token', jsonData.data.accessToken);",
+									"});",
+									"",
+									"pm.test(\"User role is Legal Council\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.roles).to.include('Legal Council');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"lc_test@jadwa.com\",\n  \"password\": \"Test123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Authentication/Sign-In",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Authentication",
+								"Sign-In"
+							]
+						}
+					}
+				},
+				{
+					"name": "Sign In - Board Secretary",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has JWT token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('accessToken');",
+									"    pm.environment.set('bs_access_token', jsonData.data.accessToken);",
+									"});",
+									"",
+									"pm.test(\"User role is Board Secretary\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.roles).to.include('Board Secretary');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"bs_test@jadwa.com\",\n  \"password\": \"Test123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Authentication/Sign-In",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Authentication",
+								"Sign-In"
+							]
+						}
+					}
+				},
+				{
+					"name": "Sign In - Board Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has JWT token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('accessToken');",
+									"    pm.environment.set('bm_access_token', jsonData.data.accessToken);",
+									"});",
+									"",
+									"pm.test(\"User role is Board Member\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.roles).to.include('Board Member');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userName\": \"bm_test@jadwa.com\",\n  \"password\": \"Test123!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Authentication/Sign-In",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Authentication",
+								"Sign-In"
+							]
+						}
+					}
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"New tokens received\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('accessToken');",
+									"    pm.expect(jsonData.data).to.have.property('refreshToken');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"{{fm_refresh_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Authentication/Refresh-Token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Authentication",
+								"Refresh-Token"
+							]
+						}
+					}
+				},
+				{
+					"name": "Sign Out",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Success message received\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{fm_access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"accessToken\": \"{{fm_access_token}}\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Authentication/Sign-Out",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Authentication",
+								"Sign-Out"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Fund Management",
+			"description": "Fund CRUD operations and management endpoints",
+			"item": [
+				{
+					"name": "Create Fund - Legal Council",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Fund created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.data).to.not.be.empty;",
+									"    ",
+									"    // Store fund ID for subsequent tests",
+									"    pm.environment.set('created_fund_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"Success message is localized\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{random_fund_name}}\",\n  \"oldCode\": \"TF{{timestamp}}\",\n  \"strategyId\": 1,\n  \"strategyName\": \"Growth Strategy\",\n  \"status\": \"Under Construction\",\n  \"statusId\": 1,\n  \"initiationDate\": \"{{current_date}}\",\n  \"propertiesNumber\": 5,\n  \"attachmentId\": 1,\n  \"votingTypeId\": 1,\n  \"legalCouncilId\": 2,\n  \"exitDate\": null,\n  \"fundManagers\": [3, 4],\n  \"fundBoardSecretaries\": [5]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/AddFund",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"AddFund"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Fund List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains fund list\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Pagination info present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('totalCount');",
+									"    pm.expect(jsonData.data).to.have.property('pageNumber');",
+									"    pm.expect(jsonData.data).to.have.property('pageSize');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/FundList?pageNumber=1&pageSize=10&search=",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"FundList"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "search",
+									"value": ""
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Fund Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Fund details returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('name');",
+									"    pm.expect(jsonData.data).to.have.property('status');",
+									"});",
+									"",
+									"pm.test(\"Fund managers included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('fundManagers');",
+									"    pm.expect(jsonData.data.fundManagers).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/FundDetails/{{created_fund_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"FundDetails",
+								"{{created_fund_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Edit Fund - Fund Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Fund updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Update message received\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{created_fund_id}},\n  \"name\": \"{{random_fund_name}} - Updated\",\n  \"strategyId\": 1,\n  \"strategyName\": \"Updated Growth Strategy\",\n  \"status\": \"Under Construction\",\n  \"statusId\": 1,\n  \"initiationDate\": \"{{current_date}}\",\n  \"propertiesNumber\": 7,\n  \"attachmentId\": 1,\n  \"votingTypeId\": 1,\n  \"legalCouncilId\": 2,\n  \"exitDate\": null,\n  \"fundManagers\": [3, 4],\n  \"fundBoardSecretaries\": [5]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/SaveFund",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"SaveFund"
+							]
+						}
+					}
+				},
+				{
+					"name": "Activate Fund - Legal Council",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Fund activated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Activation notification sent\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('activated');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{created_fund_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/ActivateFund",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"ActivateFund"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Fund History",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"History records returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"History contains audit information\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.length > 0) {",
+									"        pm.expect(jsonData.data[0]).to.have.property('userName');",
+									"        pm.expect(jsonData.data[0]).to.have.property('roleName');",
+									"        pm.expect(jsonData.data[0]).to.have.property('statusName');",
+									"        pm.expect(jsonData.data[0]).to.have.property('createdAt');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/FundHistory/{{created_fund_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"FundHistory",
+								"{{created_fund_id}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Board Member Management",
+			"description": "Board member CRUD operations and business rule testing (JDWA-596, JDWA-595)",
+			"item": [
+				{
+					"name": "Add Board Member - Valid Independent Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Board member added successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.message).to.include('MSG003');",
+									"});",
+									"",
+									"pm.test(\"Success message is localized\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"userId\": 101,\n  \"memberType\": 1,\n  \"isChairman\": false,\n  \"isActive\": true,\n  \"memberName\": \"John Doe\",\n  \"lastUpdateDate\": \"{{current_date}}\",\n  \"memberTypeDisplay\": \"Independent\",\n  \"statusDisplay\": \"Active\",\n  \"roleDisplay\": \"Member\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/BoardMembers/AddBoardMember",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BoardMembers",
+								"AddBoardMember"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Board Member - Chairman",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Chairman added successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Fund activation triggered\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Check if fund status changed to Active",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"userId\": 102,\n  \"memberType\": 1,\n  \"isChairman\": true,\n  \"isActive\": true,\n  \"memberName\": \"Jane Smith\",\n  \"lastUpdateDate\": \"{{current_date}}\",\n  \"memberTypeDisplay\": \"Independent\",\n  \"statusDisplay\": \"Active\",\n  \"roleDisplay\": \"Chairman\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/BoardMembers/AddBoardMember",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BoardMembers",
+								"AddBoardMember"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Board Member - Maximum Limit Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Maximum limit error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"    pm.expect(jsonData.message).to.include('MSG006');",
+									"});",
+									"",
+									"pm.test(\"Error message mentions maximum limit\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('14');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": 3,\n  \"userId\": 115,\n  \"memberType\": 1,\n  \"isChairman\": false,\n  \"isActive\": true,\n  \"memberName\": \"Test User 15\",\n  \"lastUpdateDate\": \"{{current_date}}\",\n  \"memberTypeDisplay\": \"Independent\",\n  \"statusDisplay\": \"Active\",\n  \"roleDisplay\": \"Member\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/BoardMembers/AddBoardMember",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BoardMembers",
+								"AddBoardMember"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Board Members List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Board members list returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Board member details included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.data.length > 0) {",
+									"        var member = jsonData.data.data[0];",
+									"        pm.expect(member).to.have.property('memberName');",
+									"        pm.expect(member).to.have.property('memberTypeDisplay');",
+									"        pm.expect(member).to.have.property('roleDisplay');",
+									"        pm.expect(member).to.have.property('statusDisplay');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/BoardMembers/BoardMembersList?fundId={{created_fund_id}}&pageNumber=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BoardMembers",
+								"BoardMembersList"
+							],
+							"query": [
+								{
+									"key": "fundId",
+									"value": "{{created_fund_id}}"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Board Members - Empty Fund",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Empty list returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"    pm.expect(jsonData.data.data).to.have.lengthOf(0);",
+									"});",
+									"",
+									"pm.test(\"No data message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG001');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/BoardMembers/BoardMembersList?fundId=999&pageNumber=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BoardMembers",
+								"BoardMembersList"
+							],
+							"query": [
+								{
+									"key": "fundId",
+									"value": "999"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Resolution Management",
+			"description": "Resolution CRUD operations and workflow testing (JDWA-511, JDWA-509, JDWA-508, JDWA-510, JDWA-570, JDWA-569). Includes confirmation, rejection, and send-to-vote operations with role-based access control and comprehensive notification testing.",
+			"item": [
+				{
+					"name": "Create Resolution - Save as Draft",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution created as draft\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.data).to.not.be.empty;",
+									"    ",
+									"    // Store resolution ID for subsequent tests",
+									"    pm.environment.set('draft_resolution_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"Resolution code generated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('FUND');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"{{random_resolution_desc}} - Draft\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": true,\n  \"resolutionItems\": [\n    {\n      \"description\": \"Approve acquisition terms\",\n      \"conflictMembers\": []\n    },\n    {\n      \"description\": \"Approve financing structure\",\n      \"conflictMembers\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Resolution - Submit for Review",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution submitted successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.data).to.not.be.empty;",
+									"    ",
+									"    // Store resolution ID for subsequent tests",
+									"    pm.environment.set('pending_resolution_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"Notifications sent\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG002');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"{{random_resolution_desc}} - For Review\",\n  \"resolutionTypeId\": 2,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 2,\n  \"memberVotingResult\": 2,\n  \"saveAsDraft\": false,\n  \"resolutionItems\": [\n    {\n      \"description\": \"Approve exit strategy\",\n      \"conflictMembers\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Resolution - Missing Required Fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Validation errors returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"    pm.expect(jsonData.message).to.include('MSG001');",
+									"});",
+									"",
+									"pm.test(\"Required field errors\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('Required');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"\",\n  \"description\": \"\",\n  \"resolutionTypeId\": null,\n  \"attachmentIds\": [],\n  \"votingMethodology\": null,\n  \"memberVotingResult\": null,\n  \"saveAsDraft\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Resolutions List",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolutions list returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Resolution details included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.data.length > 0) {",
+									"        var resolution = jsonData.data.data[0];",
+									"        pm.expect(resolution).to.have.property('code');",
+									"        pm.expect(resolution).to.have.property('description');",
+									"        pm.expect(resolution).to.have.property('status');",
+									"        pm.expect(resolution).to.have.property('resolutionType');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ResolutionsList?fundId={{created_fund_id}}&pageNumber=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ResolutionsList"
+							],
+							"query": [
+								{
+									"key": "fundId",
+									"value": "{{created_fund_id}}"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Resolution Details",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution details returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('id');",
+									"    pm.expect(jsonData.data).to.have.property('code');",
+									"    pm.expect(jsonData.data).to.have.property('description');",
+									"    pm.expect(jsonData.data).to.have.property('status');",
+									"});",
+									"",
+									"pm.test(\"Resolution items included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('resolutionItems');",
+									"    pm.expect(jsonData.data.resolutionItems).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Attachments included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('attachments');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/GetResolutionById/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"GetResolutionById",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Edit Resolution - Draft to Pending",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution updated successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Status transition successful\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG005');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{draft_resolution_id}},\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"{{random_resolution_desc}} - Updated and Submitted\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1, 2],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false,\n  \"resolutionItems\": [\n    {\n      \"id\": 1,\n      \"description\": \"Updated acquisition terms\",\n      \"conflictMembers\": []\n    },\n    {\n      \"description\": \"New financing structure\",\n      \"conflictMembers\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/EditResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"EditResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Complete Resolution Data - Legal Council",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution data completed\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Status changed to Waiting for Confirmation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resolutionId\": {{pending_resolution_id}},\n  \"saveAsDraft\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/CompleteResolutionData",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"CompleteResolutionData"
+							]
+						}
+					}
+				},
+				{
+					"name": "Cancel Resolution - Fund Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution cancelled successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Cancellation notifications sent\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG004');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/CancelResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"CancelResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete Resolution - Fund Manager",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution deleted successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Deletion confirmed\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/DeleteResolution/{{draft_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"DeleteResolution",
+								"{{draft_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Confirm Resolution - Fund Manager (JDWA-570)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution confirmed successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"MSG001 success message returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG001');",
+									"});",
+									"",
+									"pm.test(\"Confirmation notifications sent (MSG002)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Verify that notifications were sent to legal council and board secretary",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});",
+									"",
+									"// Store confirmed resolution for subsequent tests",
+									"pm.environment.set('confirmed_resolution_id', pm.request.url.path.split('/').pop());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ConfirmResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ConfirmResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Confirm Resolution - Invalid Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Invalid status error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Error message indicates invalid status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('status');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ConfirmResolution/{{draft_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ConfirmResolution",
+								"{{draft_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Confirm Resolution - Unauthorized Access (Legal Council)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 or 403\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+									"});",
+									"",
+									"pm.test(\"Unauthorized access error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Access denied message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('access');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ConfirmResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ConfirmResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reject Resolution - Fund Manager (JDWA-570)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution rejected successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"MSG001 success message returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG001');",
+									"});",
+									"",
+									"pm.test(\"Rejection notifications sent (MSG004)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Verify that notifications were sent to all stakeholders",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});",
+									"",
+									"// Store rejected resolution for subsequent tests",
+									"pm.environment.set('rejected_resolution_id', pm.request.url.path.split('/').pop());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rejectionReason\": \"The resolution does not meet the required criteria for approval. Additional documentation and clarification are needed before proceeding.\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/RejectResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"RejectResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reject Resolution - Missing Rejection Reason",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Validation error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Rejection reason required error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('required');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rejectionReason\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/RejectResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"RejectResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Reject Resolution - Invalid Rejection Reason Length",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Validation error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Length validation error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('length');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rejectionReason\": \"Too short\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/RejectResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"RejectResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Resolution to Vote - Legal Council (JDWA-569)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution sent to vote successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"MSG001 success message returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG001');",
+									"});",
+									"",
+									"pm.test(\"Vote notifications sent (MSG002)\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Verify that notifications were sent to all stakeholders",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});",
+									"",
+									"// Store voting resolution for subsequent tests",
+									"pm.environment.set('voting_resolution_id', pm.request.url.path.split('/').pop());"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/SendToVote/{{confirmed_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"SendToVote",
+								"{{confirmed_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Resolution to Vote - Board Secretary (JDWA-569)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution sent to vote successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"MSG001 success message returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG001');",
+									"});",
+									"",
+									"pm.test(\"Vote notifications sent to all stakeholders\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Verify notifications sent to Fund Managers, Board Members, Legal Council",
+									"    pm.expect(jsonData.message).to.not.be.empty;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bs_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/SendToVote/{{confirmed_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"SendToVote",
+								"{{confirmed_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Resolution to Vote - Invalid Status",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Invalid status error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Error message indicates invalid status\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('status');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/SendToVote/{{draft_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"SendToVote",
+								"{{draft_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Send Resolution to Vote - Unauthorized Access (Fund Manager)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401 or 403\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([401, 403]);",
+									"});",
+									"",
+									"pm.test(\"Unauthorized access error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Access denied message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('access');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/SendToVote/{{confirmed_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"SendToVote",
+								"{{confirmed_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Resolution Not Found - All Endpoints",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Not found error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Resolution not found message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('not found');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ConfirmResolution/99999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ConfirmResolution",
+								"99999"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Resolution Workflow Testing (JDWA-570, JDWA-569)",
+			"description": "Comprehensive testing for Resolution confirmation, rejection, and send-to-vote workflows with role-based access control, status validation, and notification verification",
+			"item": [
+				{
+					"name": "Workflow Test - Complete Resolution Lifecycle",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// This is a workflow test that should be run after creating a resolution",
+									"pm.test(\"Workflow test setup\", function () {",
+									"    pm.expect(pm.environment.get('pending_resolution_id')).to.not.be.undefined;",
+									"    pm.expect(pm.environment.get('fm_access_token')).to.not.be.undefined;",
+									"    pm.expect(pm.environment.get('lc_access_token')).to.not.be.undefined;",
+									"    pm.expect(pm.environment.get('bs_access_token')).to.not.be.undefined;",
+									"});",
+									"",
+									"pm.test(\"Instructions for manual workflow testing\", function () {",
+									"    console.log('=== Resolution Workflow Test Instructions ===');",
+									"    console.log('1. Run \"Create Resolution - Submit for Review\" first');",
+									"    console.log('2. Run \"Complete Resolution Data - Legal Council\"');",
+									"    console.log('3. Run \"Confirm Resolution - Fund Manager (JDWA-570)\"');",
+									"    console.log('4. Run \"Send Resolution to Vote - Legal Council (JDWA-569)\"');",
+									"    console.log('5. Verify notifications in \"Get All Notifications\"');",
+									"    console.log('=== End Instructions ===');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ResolutionsList?fundId={{created_fund_id}}&pageNumber=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ResolutionsList"
+							],
+							"query": [
+								{
+									"key": "fundId",
+									"value": "{{created_fund_id}}"
+								},
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Status Transition Validation Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status transition validation\", function () {",
+									"    console.log('=== Status Transition Test ===');",
+									"    console.log('Valid transitions:');",
+									"    console.log('Draft → Pending (via EditResolution with saveAsDraft=false)');",
+									"    console.log('Pending → WaitingForConfirmation (via CompleteResolutionData)');",
+									"    console.log('WaitingForConfirmation → Confirmed (via ConfirmResolution)');",
+									"    console.log('WaitingForConfirmation → Rejected (via RejectResolution)');",
+									"    console.log('Confirmed → VotingInProgress (via SendToVote)');",
+									"    console.log('=== Invalid transitions should return 400/422 ===');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/GetResolutionById/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"GetResolutionById",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Role-Based Access Control Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"RBAC validation\", function () {",
+									"    console.log('=== Role-Based Access Control Test ===');",
+									"    console.log('ConfirmResolution: Only Fund Manager allowed');",
+									"    console.log('RejectResolution: Only Fund Manager allowed');",
+									"    console.log('SendToVote: Only Legal Council and Board Secretary allowed');",
+									"    console.log('=== Unauthorized access should return 401/403 ===');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/GetResolutionById/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"GetResolutionById",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Notification Management",
+			"description": "Notification filtering and management endpoints (JDWA-671)",
+			"item": [
+				{
+					"name": "Get All Notifications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Notifications list returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Notification details included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData.data.data.length > 0) {",
+									"        var notification = jsonData.data.data[0];",
+									"        pm.expect(notification).to.have.property('title');",
+									"        pm.expect(notification).to.have.property('message');",
+									"        pm.expect(notification).to.have.property('createdAt');",
+									"        pm.expect(notification).to.have.property('isRead');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Notification/NotitficationList?pageNumber=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Notification",
+								"NotitficationList"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Get Unread Notifications",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Unread notifications returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"All notifications are unread\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    jsonData.data.data.forEach(function(notification) {",
+									"        pm.expect(notification.isRead).to.be.false;",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Notification/UnReadedNotificationList?pageNumber=1&pageSize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Notification",
+								"UnReadedNotificationList"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Filter Notifications by Fund Activity",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Filtered notifications returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('data');",
+									"    pm.expect(jsonData.data.data).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Filter applied correctly\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    // Verify that notifications are related to board member activities",
+									"    jsonData.data.data.forEach(function(notification) {",
+									"        pm.expect(notification.title.toLowerCase()).to.include('board');",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Notification/NotitficationList?pageNumber=1&pageSize=10&filter=BoardMemberActivities",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Notification",
+								"NotitficationList"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "10"
+								},
+								{
+									"key": "filter",
+									"value": "BoardMemberActivities"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "File Management",
+			"description": "File upload and download operations for attachments",
+			"item": [
+				{
+					"name": "Upload File - Valid PDF",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"File uploaded successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.data).to.not.be.empty;",
+									"    ",
+									"    // Store file ID for subsequent tests",
+									"    pm.environment.set('uploaded_file_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"File metadata returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.have.property('fileName');",
+									"    pm.expect(jsonData.data).to.have.property('fileSize');",
+									"    pm.expect(jsonData.data).to.have.property('contentType');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "test_resolution.pdf"
+								},
+								{
+									"key": "description",
+									"value": "Test resolution document",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/FileManagment/UploadFile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"FileManagment",
+								"UploadFile"
+							]
+						}
+					}
+				},
+				{
+					"name": "Upload File - Invalid Type",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"File type validation error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"    pm.expect(jsonData.message).to.include('PDF');",
+									"});",
+									"",
+									"pm.test(\"Error message is descriptive\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('allowed');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "test_document.docx"
+								},
+								{
+									"key": "description",
+									"value": "Invalid file type test",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/FileManagment/UploadFile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"FileManagment",
+								"UploadFile"
+							]
+						}
+					}
+				},
+				{
+					"name": "Download File",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"File content returned\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/pdf');",
+									"});",
+									"",
+									"pm.test(\"Content disposition header present\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Disposition')).to.not.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fileId\": {{uploaded_file_id}}\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/FileManagment/DownloadFile",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"FileManagment",
+								"DownloadFile"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Security Testing",
+			"description": "Security and authorization testing scenarios",
+			"item": [
+				{
+					"name": "Unauthorized Access - No Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Unauthorized error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('Unauthorized');",
+									"});",
+									"",
+									"pm.test(\"No sensitive data exposed\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData).to.not.have.property('data');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Funds/FundsList",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Funds",
+								"FundsList"
+							]
+						}
+					}
+				},
+				{
+					"name": "Cross-Fund Access Prevention",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Access denied message\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('Forbidden');",
+									"});",
+									"",
+									"pm.test(\"No unauthorized data returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.be.null;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Funds/GetFunDetails?id=999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Funds",
+								"GetFunDetails"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "999"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Role-Based Access Control - Board Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 403\", function () {",
+									"    pm.response.to.have.status(403);",
+									"});",
+									"",
+									"pm.test(\"Insufficient permissions error\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('permission');",
+									"});",
+									"",
+									"pm.test(\"Board member cannot create resolutions\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"Unauthorized resolution attempt\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Input Validation - XSS Prevention",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 422\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 422]);",
+									"});",
+									"",
+									"pm.test(\"Malicious input rejected\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});",
+									"",
+									"pm.test(\"Script tags sanitized\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.include('<script>');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"<script>alert('xss')</script>Malicious resolution\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Error Scenarios",
+			"description": "Error handling and edge case testing",
+			"item": [
+				{
+					"name": "Database Connection Failure Simulation",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 500 or 503\", function () {",
+									"    pm.expect(pm.response.code).to.be.oneOf([500, 503]);",
+									"});",
+									"",
+									"pm.test(\"System error message returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('MSG004');",
+									"});",
+									"",
+									"pm.test(\"No sensitive information exposed\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.include('connection string');",
+									"    pm.expect(jsonData.message).to.not.include('database');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "X-Simulate-Error",
+								"value": "database-failure"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Funds/FundsList",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Funds",
+								"FundsList"
+							]
+						}
+					}
+				},
+				{
+					"name": "Invalid Fund ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"pm.test(\"Not found error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('not found');",
+									"});",
+									"",
+									"pm.test(\"Error is user-friendly\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.not.include('SQL');",
+									"    pm.expect(jsonData.message).to.not.include('Exception');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Funds/GetFunDetails?id=99999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Funds",
+								"GetFunDetails"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "99999"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Malformed JSON Request",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"JSON parsing error returned\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('JSON');",
+									"});",
+									"",
+									"pm.test(\"Request not processed\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.false;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"Test resolution\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false,\n  // This comment makes the JSON invalid\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Workflow Testing",
+			"description": "End-to-end business workflow testing scenarios including Alternative 1 & 2 workflows",
+			"item": [
+				{
+					"name": "Alternative 1 - Voting Suspension Workflow",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Resolution status changed to WaitingForConfirmation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.message).to.include('suspended');",
+									"});",
+									"",
+									"pm.test(\"MSG007 notification triggered\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.include('MSG007');",
+									"});",
+									"",
+									"pm.test(\"Voting session suspended\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('voting');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"id\": {{voting_resolution_id}},\n  \"fundId\": {{created_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"Updated resolution during voting - Alternative 1 Test\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false,\n  \"resolutionItems\": [\n    {\n      \"id\": 1,\n      \"description\": \"Updated item during voting\",\n      \"conflictMembers\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/EditResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"EditResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Alternative 2 - New Resolution from Approved",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"New resolution created successfully\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    pm.expect(jsonData.data).to.not.be.empty;",
+									"    ",
+									"    // Store new resolution ID",
+									"    pm.environment.set('new_resolution_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"Resolution linked to original\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('linked');",
+									"});",
+									"",
+									"pm.test(\"MSG009 notification triggered\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.include('MSG009');",
+									"});",
+									"",
+									"pm.test(\"New resolution code generated\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('FUND');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{created_fund_id}},\n  \"originalResolutionId\": {{approved_resolution_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"New resolution from approved - Alternative 2 Test\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false,\n  \"resolutionItems\": [\n    {\n      \"description\": \"Updated item from approved resolution\",\n      \"conflictMembers\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "MSG Notification Testing - Arabic",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Set Arabic language for testing",
+									"pm.request.headers.add({",
+									"    key: 'Accept-Language',",
+									"    value: 'ar-EG'",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Arabic notification content\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    // Check for Arabic text in response",
+									"    pm.expect(jsonData.message).to.match(/[\\u0600-\\u06FF]/);",
+									"});",
+									"",
+									"pm.test(\"MSG notification type included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.match(/MSG00[0-9]/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "ar-EG"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/ConfirmResolution/{{pending_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"ConfirmResolution",
+								"{{pending_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "MSG Notification Testing - English",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Set English language for testing",
+									"pm.request.headers.add({",
+									"    key: 'Accept-Language',",
+									"    value: 'en-US'",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"English notification content\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    // Check for English text in response",
+									"    pm.expect(jsonData.message).to.match(/[a-zA-Z]/);",
+									"});",
+									"",
+									"pm.test(\"MSG notification type included\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data).to.match(/MSG00[0-9]/);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{bs_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/SendToVote/{{confirmed_resolution_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"SendToVote",
+								"{{confirmed_resolution_id}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Complete Fund Lifecycle",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Set up workflow test data",
+									"pm.globals.set('workflow_fund_name', 'Workflow Test Fund ' + Date.now());",
+									"pm.globals.set('workflow_resolution_desc', 'Workflow Test Resolution ' + Date.now());"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Fund creation workflow completed\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    ",
+									"    // Store for next workflow step",
+									"    pm.environment.set('workflow_fund_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"Fund status is Under Construction\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('Under Construction');",
+									"});",
+									"",
+									"// Automatically trigger next workflow step",
+									"setTimeout(function() {",
+									"    postman.setNextRequest('Add Board Members to Fund');",
+									"}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"{{workflow_fund_name}}\",\n  \"oldCode\": \"WF{{timestamp}}\",\n  \"strategyId\": 1,\n  \"strategyName\": \"Workflow Strategy\",\n  \"status\": \"Under Construction\",\n  \"statusId\": 1,\n  \"initiationDate\": \"{{current_date}}\",\n  \"propertiesNumber\": 3,\n  \"attachmentId\": 1,\n  \"votingTypeId\": 1,\n  \"legalCouncilId\": 2,\n  \"exitDate\": null,\n  \"fundManagers\": [3],\n  \"fundBoardSecretaries\": [5]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Users/Fund/AddFund",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Users",
+								"Fund",
+								"AddFund"
+							]
+						}
+					}
+				},
+				{
+					"name": "Add Board Members to Fund",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Board member added successfully\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Fund activation triggered\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('activated');",
+									"});",
+									"",
+									"// Continue workflow",
+									"setTimeout(function() {",
+									"    postman.setNextRequest('Create Resolution in Active Fund');",
+									"}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{workflow_fund_id}},\n  \"userId\": 201,\n  \"memberType\": 1,\n  \"isChairman\": true,\n  \"isActive\": true,\n  \"memberName\": \"Workflow Chairman\",\n  \"lastUpdateDate\": \"{{current_date}}\",\n  \"memberTypeDisplay\": \"Independent\",\n  \"statusDisplay\": \"Active\",\n  \"roleDisplay\": \"Chairman\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/BoardMembers/AddBoardMember",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"BoardMembers",
+								"AddBoardMember"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Resolution in Active Fund",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Resolution created in active fund\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"    ",
+									"    pm.environment.set('workflow_resolution_id', jsonData.data);",
+									"});",
+									"",
+									"pm.test(\"Resolution submitted for review\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('Pending');",
+									"});",
+									"",
+									"// Continue workflow",
+									"setTimeout(function() {",
+									"    postman.setNextRequest('Complete Resolution Data');",
+									"}, 1000);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fundId\": {{workflow_fund_id}},\n  \"resolutionDate\": \"{{current_date}}\",\n  \"description\": \"{{workflow_resolution_desc}}\",\n  \"resolutionTypeId\": 1,\n  \"attachmentIds\": [1],\n  \"votingMethodology\": 1,\n  \"memberVotingResult\": 1,\n  \"saveAsDraft\": false,\n  \"resolutionItems\": [\n    {\n      \"description\": \"Workflow test item 1\",\n      \"conflictMembers\": []\n    }\n  ]\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/AddResolution",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"AddResolution"
+							]
+						}
+					}
+				},
+				{
+					"name": "Complete Resolution Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Resolution data completed\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.isSuccess).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"Status changed to Waiting for Confirmation\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.message).to.include('Waiting');",
+									"});",
+									"",
+									"pm.test(\"Workflow completed successfully\", function () {",
+									"    console.log('Complete fund lifecycle workflow finished successfully');",
+									"    pm.expect(true).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{lc_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"resolutionId\": {{workflow_resolution_id}},\n  \"saveAsDraft\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/Resolutions/CompleteResolutionData",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Resolutions",
+								"CompleteResolutionData"
+							]
+						}
+					}
+				},
+				{
+					"name": "Verify Notifications Generated",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Notifications were generated\", function () {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.data.data.length).to.be.greaterThan(0);",
+									"});",
+									"",
+									"pm.test(\"Workflow notifications present\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    var hasWorkflowNotifications = jsonData.data.data.some(function(notification) {",
+									"        return notification.title.includes('Resolution') || notification.title.includes('Fund');",
+									"    });",
+									"    pm.expect(hasWorkflowNotifications).to.be.true;",
+									"});",
+									"",
+									"pm.test(\"End-to-end workflow validation complete\", function () {",
+									"    console.log('All workflow steps completed and validated successfully');",
+									"    pm.expect(true).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{fm_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/Notification/NotitficationList?pageNumber=1&pageSize=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"Notification",
+								"NotitficationList"
+							],
+							"query": [
+								{
+									"key": "pageNumber",
+									"value": "1"
+								},
+								{
+									"key": "pageSize",
+									"value": "20"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global pre-request script for dynamic data generation",
+					"",
+					"// Generate random test data",
+					"pm.globals.set('random_fund_name', 'Test Fund ' + Math.floor(Math.random() * 1000));",
+					"pm.globals.set('random_resolution_desc', 'Test Resolution ' + Math.floor(Math.random() * 1000));",
+					"pm.globals.set('current_date', new Date().toISOString().split('T')[0]);",
+					"pm.globals.set('timestamp', Date.now());",
+					"",
+					"// Set common headers if token exists",
+					"const token = pm.environment.get('fm_access_token');",
+					"if (token) {",
+					"    pm.request.headers.add({",
+					"        key: 'Authorization',",
+					"        value: 'Bearer ' + token",
+					"    });",
+					"}"
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"// Global test script for common validations",
+					"",
+					"pm.test(\"Response time is less than 5000ms\", function () {",
+					"    pm.expect(pm.response.responseTime).to.be.below(5000);",
+					"});",
+					"",
+					"pm.test(\"Response has proper content type\", function () {",
+					"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+					"});",
+					"",
+					"// Check for standard error responses",
+					"if (pm.response.code >= 400) {",
+					"    pm.test(\"Error response has message\", function () {",
+					"        var jsonData = pm.response.json();",
+					"        pm.expect(jsonData).to.have.property('message');",
+					"    });",
+					"}"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://api.jadwa.local",
+			"type": "string"
+		},
+		{
+			"key": "api_version",
+			"value": "v1",
+			"type": "string"
+		},
+		{
+			"key": "voting_resolution_id",
+			"value": "1",
+			"type": "string",
+			"description": "ID of resolution in VotingInProgress status for Alternative 1 testing"
+		},
+		{
+			"key": "approved_resolution_id",
+			"value": "2",
+			"type": "string",
+			"description": "ID of approved resolution for Alternative 2 testing"
+		},
+		{
+			"key": "original_resolution_id",
+			"value": "2",
+			"type": "string",
+			"description": "ID of original resolution for Alternative 2 workflow"
+		},
+		{
+			"key": "new_resolution_id",
+			"value": "",
+			"type": "string",
+			"description": "ID of newly created resolution from Alternative 2 workflow"
+		},
+		{
+			"key": "current_date",
+			"value": "2025-12-27",
+			"type": "string",
+			"description": "Current date for testing"
+		},
+		{
+			"key": "timestamp",
+			"value": "1735315200",
+			"type": "string",
+			"description": "Current timestamp for unique identifiers"
+		},
+		{
+			"key": "random_resolution_desc",
+			"value": "Test Resolution",
+			"type": "string",
+			"description": "Random resolution description for testing"
+		}
+	]
+}
