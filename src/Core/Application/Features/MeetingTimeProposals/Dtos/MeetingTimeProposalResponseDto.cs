@@ -1,15 +1,13 @@
+using Abstraction.Base.Dto;
+
 namespace Application.Features.MeetingTimeProposals.Dtos
 {
     /// <summary>
     /// Response DTO for meeting time proposal details
     /// Used for displaying proposal information
     /// </summary>
-    public class MeetingTimeProposalResponseDto
+    public record MeetingTimeProposalResponseDto :BaseDto
     {
-        /// <summary>
-        /// Proposal identifier
-        /// </summary>
-        public int Id { get; set; }
 
         /// <summary>
         /// Fund identifier

@@ -8,16 +8,13 @@ namespace Application.Features.MeetingTimeProposals.Queries.GetDetails
     /// Query for getting meeting time proposal details
     /// Used for displaying proposal information for voting
     /// </summary>
-    public class GetMeetingTimeProposalDetailsQuery : IQuery<BaseResponse<MeetingTimeProposalResponseDto>>
+    public record GetMeetingTimeProposalDetailsQuery : IQuery<BaseResponse<MeetingTimeProposalResponseDto>>
     {
         /// <summary>
         /// Proposal identifier to retrieve
         /// </summary>
         public int ProposalId { get; set; }
 
-        public GetMeetingTimeProposalDetailsQuery(int proposalId)
-        {
-            ProposalId = proposalId;
-        }
+ 
     }
 }
