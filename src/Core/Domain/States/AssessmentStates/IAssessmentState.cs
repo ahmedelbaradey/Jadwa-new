@@ -52,6 +52,42 @@ namespace Domain.States.AssessmentStates
         List<AssessmentActionEnum> GetAvailableActions();
 
         /// <summary>
+        /// Validates if the current state allows editing
+        /// </summary>
+        /// <returns>True if editing is allowed in this state</returns>
+        bool CanEdit();
+
+        /// <summary>
+        /// Validates if the current state allows completion operations
+        /// </summary>
+        /// <returns>True if completion is allowed in this state</returns>
+        bool CanComplete();
+
+        /// <summary>
+        /// Validates if the current state allows deletion
+        /// </summary>
+        /// <returns>True if deletion is allowed in this state</returns>
+        bool CanDelete();
+
+        /// <summary>
+        /// Gets the state-specific business rules and validation messages
+        /// </summary>
+        /// <returns>Collection of validation messages for this state</returns>
+        IEnumerable<string> GetValidationMessages();
+
+        /// <summary>
+        /// Handles the state-specific logic and transitions
+        /// </summary>
+        /// <param name="assessment">The assessment entity to operate on</param>
+        void Handle(Assessment assessment);
+
+        /// <summary>
+        /// Gets the localized resource key for the current state description
+        /// </summary>
+        /// <returns>Resource key for state description</returns>
+        string GetStateDescriptionKey();
+
+        /// <summary>
         /// Handles state-specific logic
         /// </summary>
         /// <param name="assessment">The assessment to handle</param>

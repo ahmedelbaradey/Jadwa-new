@@ -116,7 +116,7 @@ namespace Domain.Entities.AssessmentManagement
         /// Initializes state from Status if not already set
         /// </summary>
         [NotMapped]
-        public IAssessmentState CurrentState => _currentState ??= AssessmentStateFactory.CreateState(Status);
+        public IAssessmentState CurrentState => _currentState ??= CreateStateFromStatus(Status);
 
         /// <summary>
         /// Initializes the state from the current Status
@@ -124,7 +124,27 @@ namespace Domain.Entities.AssessmentManagement
         /// </summary>
         public void InitializeState()
         {
-            _currentState = AssessmentStateFactory.CreateState(Status);
+            _currentState = CreateStateFromStatus(Status);
+        }
+
+        /// <summary>
+        /// Creates a state instance from the given status
+        /// Simple factory method for state creation
+        /// </summary>
+        /// <param name="status">Assessment status</param>
+        /// <returns>Appropriate state instance</returns>
+        private static IAssessmentState CreateStateFromStatus(AssessmentStatus status)
+        {
+            return status switch
+            {
+                AssessmentStatus.Draft => new DraftState(),
+                AssessmentStatus.WaitingForApproval => new WaitingForApprovalState(),
+                AssessmentStatus.Approved => new ApprovedState(),
+                AssessmentStatus.Rejected => new RejectedState(),
+                AssessmentStatus.Active => new ActiveState(),
+                AssessmentStatus.Completed => new CompletedState(),
+                _ => throw new ArgumentException($"Unsupported assessment status: {status}", nameof(status))
+            };
         }
 
         /// <summary>
@@ -141,7 +161,7 @@ namespace Domain.Entities.AssessmentManagement
                 if (success)
                 {
                     Status = targetStatus;
-                    _currentState = AssessmentStateFactory.CreateState(targetStatus);
+                    _currentState = CreateStateFromStatus(targetStatus);
                     return true;
                 }
             }
@@ -168,19 +188,10 @@ namespace Domain.Entities.AssessmentManagement
         }
 
         /// <summary>
-        /// Validates the current state business rules
-        /// </summary>
-        /// <returns>Validation result with success status and messages</returns>
-        public (bool IsValid, List<string> ValidationMessages) ValidateCurrentState()
-        {
-            return CurrentState.ValidateState(this);
-        }
-
-        /// <summary>
         /// Gets the available actions for the current state
         /// </summary>
-        /// <returns>List of available actions</returns>
-        public List<string> GetAvailableActions()
+        /// <returns>List of available action enums</returns>
+        public List<AssessmentActionEnum> GetAvailableActions()
         {
             return CurrentState.GetAvailableActions();
         }

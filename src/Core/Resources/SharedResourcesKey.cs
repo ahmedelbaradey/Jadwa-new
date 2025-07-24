@@ -687,5 +687,9 @@
         public const string AssessmentExportData = "AssessmentExportData";
         public const string AssessmentArchive = "AssessmentArchive";
 
+        // Question Type Resource Keys
+        public const string QuestionTypeSingleChoice = "QuestionTypeSingleChoice";
+        public const string QuestionTypeText = "QuestionTypeText";
+
     }
 }

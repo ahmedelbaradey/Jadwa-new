@@ -1364,4 +1364,11 @@
   <data name="AssessmentArchive" xml:space="preserve">
     <value>أرشفة</value>
   </data>
+  <!-- Question Type Localization -->
+  <data name="QuestionTypeSingleChoice" xml:space="preserve">
+    <value>اختيار واحد</value>
+  </data>
+  <data name="QuestionTypeText" xml:space="preserve">
+    <value>نص</value>
+  </data>
 </root>

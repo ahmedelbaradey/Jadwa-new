@@ -77,6 +77,75 @@ namespace Domain.States.AssessmentStates
         public abstract List<AssessmentActionEnum> GetAvailableActions();
 
         /// <summary>
+        /// Validates if the current state allows editing
+        /// Default implementation - can be overridden by concrete states
+        /// </summary>
+        /// <returns>True if editing is allowed in this state</returns>
+        public virtual bool CanEdit()
+        {
+            return Status == AssessmentStatus.Draft || Status == AssessmentStatus.Rejected;
+        }
+
+        /// <summary>
+        /// Validates if the current state allows completion operations
+        /// Default implementation - can be overridden by concrete states
+        /// </summary>
+        /// <returns>True if completion is allowed in this state</returns>
+        public virtual bool CanComplete()
+        {
+            return Status == AssessmentStatus.Active;
+        }
+
+        /// <summary>
+        /// Validates if the current state allows deletion
+        /// Default implementation - can be overridden by concrete states
+        /// </summary>
+        /// <returns>True if deletion is allowed in this state</returns>
+        public virtual bool CanDelete()
+        {
+            return Status == AssessmentStatus.Draft || Status == AssessmentStatus.Rejected;
+        }
+
+        /// <summary>
+        /// Gets the state-specific business rules and validation messages
+        /// Default implementation - can be overridden by concrete states
+        /// </summary>
+        /// <returns>Collection of validation messages for this state</returns>
+        public virtual IEnumerable<string> GetValidationMessages()
+        {
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Handles the state-specific logic and transitions
+        /// Default implementation - can be overridden by concrete states
+        /// </summary>
+        /// <param name="assessment">The assessment entity to operate on</param>
+        public virtual void Handle(Assessment assessment)
+        {
+            // Default implementation - no specific handling required
+        }
+
+        /// <summary>
+        /// Gets the localized resource key for the current state description
+        /// Default implementation - can be overridden by concrete states
+        /// </summary>
+        /// <returns>Resource key for state description</returns>
+        public virtual string GetStateDescriptionKey()
+        {
+            return Status switch
+            {
+                AssessmentStatus.Draft => SharedResourcesKey.AssessmentStatusDraft,
+                AssessmentStatus.WaitingForApproval => SharedResourcesKey.AssessmentStatusWaitingForApproval,
+                AssessmentStatus.Approved => SharedResourcesKey.AssessmentStatusApproved,
+                AssessmentStatus.Rejected => SharedResourcesKey.AssessmentStatusRejected,
+                AssessmentStatus.Active => SharedResourcesKey.AssessmentStatusActive,
+                AssessmentStatus.Completed => SharedResourcesKey.AssessmentStatusCompleted,
+                _ => Status.ToString()
+            };
+        }
+
+        /// <summary>
         /// Handles state-specific logic
         /// Default implementation does nothing, can be overridden by concrete states
         /// </summary>

@@ -47,6 +47,7 @@ namespace Infrastructure.Data
         public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
         public DbSet<AssessmentResponse> AssessmentResponses { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<AssessmentStatusHistory> AssessmentStatusHistories { get; set; }
 
         #endregion
 

@@ -1364,4 +1364,11 @@ You should add board members to be able to perform fund activities, at least 2 i
   <data name="AssessmentArchive" xml:space="preserve">
     <value>Archive</value>
   </data>
+  <!-- Question Type Localization -->
+  <data name="QuestionTypeSingleChoice" xml:space="preserve">
+    <value>Single Choice</value>
+  </data>
+  <data name="QuestionTypeText" xml:space="preserve">
+    <value>Text</value>
+  </data>
 </root>

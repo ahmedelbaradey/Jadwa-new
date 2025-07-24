@@ -3,18 +3,23 @@ using AutoMapper;
 using Domain.Entities.AssessmentManagement;
 using System.Text.Json;
 using Abstraction.Contract.Service;
+using Microsoft.Extensions.Localization;
+using Resources;
 
 namespace Application.Features.Assessments.Profiles
 {
     /// <summary>
     /// AutoMapper profile for Assessment-related entities and DTOs
-    /// Provides mapping configurations between domain entities and DTOs
-    /// Based on existing profile patterns in the codebase
+    /// Provides mapping configurations between domain entities and DTOs with proper localization
+    /// Follows Resolution module patterns with dependency injection for localization
     /// </summary>
     public class AssessmentProfile : Profile
     {
-        public AssessmentProfile()
+        private readonly IStringLocalizer<SharedResources> _localizer;
+
+        public AssessmentProfile(IStringLocalizer<SharedResources> localizer)
         {
+            _localizer = localizer ?? throw new ArgumentNullException(nameof(localizer));
             CreateAssessmentMappings();
             CreateAssessmentQuestionMappings();
             CreateAssessmentResponseMappings();
@@ -96,56 +101,50 @@ namespace Application.Features.Assessments.Profiles
         }
 
         /// <summary>
-        /// Gets display name for assessment type based on current culture
+        /// Gets display name for assessment type using proper localization
         /// </summary>
         /// <param name="type">Assessment type</param>
         /// <returns>Localized type display name</returns>
-        private static string GetAssessmentTypeDisplayName(AssessmentType type)
+        private string GetAssessmentTypeDisplayName(AssessmentType type)
         {
-            var isArabic = System.Globalization.CultureInfo.CurrentCulture.Name.StartsWith("ar");
-            
             return type switch
             {
-                AssessmentType.Questionnaire => isArabic ? "استبيان" : "Questionnaire",
-                AssessmentType.Attachment => isArabic ? "مرفق" : "Attachment",
+                AssessmentType.Questionnaire => _localizer[SharedResourcesKey.AssessmentTypeQuestionnaire],
+                AssessmentType.Attachment => _localizer[SharedResourcesKey.AssessmentTypeAttachment],
                 _ => type.ToString()
             };
         }
 
         /// <summary>
-        /// Gets display name for assessment status based on current culture
+        /// Gets display name for assessment status using proper localization
         /// </summary>
         /// <param name="status">Assessment status</param>
         /// <returns>Localized status display name</returns>
-        private static string GetAssessmentStatusDisplayName(AssessmentStatus status)
+        private string GetAssessmentStatusDisplayName(AssessmentStatus status)
         {
-            var isArabic = System.Globalization.CultureInfo.CurrentCulture.Name.StartsWith("ar");
-            
             return status switch
             {
-                AssessmentStatus.Draft => isArabic ? "مسودة" : "Draft",
-                AssessmentStatus.WaitingForApproval => isArabic ? "في انتظار الموافقة" : "Waiting for Approval",
-                AssessmentStatus.Approved => isArabic ? "موافق عليه" : "Approved",
-                AssessmentStatus.Rejected => isArabic ? "مرفوض" : "Rejected",
-                AssessmentStatus.Active => isArabic ? "نشط" : "Active",
-                AssessmentStatus.Completed => isArabic ? "مكتمل" : "Completed",
+                AssessmentStatus.Draft => _localizer[SharedResourcesKey.AssessmentStatusDraft],
+                AssessmentStatus.WaitingForApproval => _localizer[SharedResourcesKey.AssessmentStatusWaitingForApproval],
+                AssessmentStatus.Approved => _localizer[SharedResourcesKey.AssessmentStatusApproved],
+                AssessmentStatus.Rejected => _localizer[SharedResourcesKey.AssessmentStatusRejected],
+                AssessmentStatus.Active => _localizer[SharedResourcesKey.AssessmentStatusActive],
+                AssessmentStatus.Completed => _localizer[SharedResourcesKey.AssessmentStatusCompleted],
                 _ => status.ToString()
             };
         }
 
         /// <summary>
-        /// Gets display name for question type based on current culture
+        /// Gets display name for question type using proper localization
         /// </summary>
         /// <param name="type">Question type</param>
         /// <returns>Localized type display name</returns>
-        private static string GetQuestionTypeDisplayName(QuestionType type)
+        private string GetQuestionTypeDisplayName(QuestionType type)
         {
-            var isArabic = System.Globalization.CultureInfo.CurrentCulture.Name.StartsWith("ar");
-            
             return type switch
             {
-                QuestionType.SingleChoice => isArabic ? "اختيار واحد" : "Single Choice",
-                QuestionType.Text => isArabic ? "نص" : "Text",
+                QuestionType.SingleChoice => _localizer[SharedResourcesKey.QuestionTypeSingleChoice],
+                QuestionType.Text => _localizer[SharedResourcesKey.QuestionTypeText],
                 _ => type.ToString()
             };
         }
