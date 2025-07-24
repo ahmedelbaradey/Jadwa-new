@@ -469,6 +469,54 @@
         public const string SecurityViolationAuditNote = "SecurityViolationAuditNote"; // MSG-AUDIT-005
         public const string ConcurrentSessionLimitExceededAuditNote = "ConcurrentSessionLimitExceededAuditNote"; // MSG-AUDIT-006
         public const string SessionActivityAuditNote = "SessionActivityAuditNote"; // MSG-AUDIT-007
+
+        // Assessment Status Localization Keys
+        public const string AssessmentStatusDraft = "AssessmentStatusDraft";
+        public const string AssessmentStatusWaitingForApproval = "AssessmentStatusWaitingForApproval";
+        public const string AssessmentStatusApproved = "AssessmentStatusApproved";
+        public const string AssessmentStatusRejected = "AssessmentStatusRejected";
+        public const string AssessmentStatusActive = "AssessmentStatusActive";
+        public const string AssessmentStatusCompleted = "AssessmentStatusCompleted";
+
+        // Assessment Type Localization Keys
+        public const string AssessmentTypeQuestionnaire = "AssessmentTypeQuestionnaire";
+        public const string AssessmentTypeAttachment = "AssessmentTypeAttachment";
+
+        // Question Type Localization Keys
+        public const string QuestionTypeSingleChoice = "QuestionTypeSingleChoice";
+        public const string QuestionTypeText = "QuestionTypeText";
+
+        // Assessment Validation Messages
+        public const string AssessmentTitleRequired = "AssessmentTitleRequired";
+        public const string AssessmentTypeRequired = "AssessmentTypeRequired";
+        public const string AtLeastOneQuestionRequired = "AtLeastOneQuestionRequired";
+        public const string AttachmentRequired = "AttachmentRequired";
+        public const string RejectionReasonRequired = "RejectionReasonRequired";
+        public const string AllRequiredQuestionsRequired = "AllRequiredQuestionsRequired";
+        public const string QuestionTextRequired = "QuestionTextRequired";
+        public const string QuestionOptionsRequired = "QuestionOptionsRequired";
+
+        // Assessment Success Messages
+        public const string AssessmentSubmittedForApproval = "AssessmentSubmittedForApproval";
+        public const string AssessmentSavedAsDraft = "AssessmentSavedAsDraft";
+        public const string AssessmentApproved = "AssessmentApproved";
+        public const string AssessmentRejected = "AssessmentRejected";
+        public const string AssessmentDistributed = "AssessmentDistributed";
+        public const string ResponseSubmittedSuccessfully = "ResponseSubmittedSuccessfully";
+
+        // Assessment Notification Messages
+        public const string NewAssessmentWaitingApproval = "NewAssessmentWaitingApproval";
+        public const string AssessmentApprovedNotification = "AssessmentApprovedNotification";
+        public const string AssessmentRejectedNotification = "AssessmentRejectedNotification";
+        public const string NewAssessmentReadyForResponse = "NewAssessmentReadyForResponse";
+        public const string AssessmentDistributionConfirmation = "AssessmentDistributionConfirmation";
+
+        // Assessment Error Messages
+        public const string InvalidStatusTransition = "InvalidStatusTransition";
+        public const string AssessmentNotFound = "AssessmentNotFound";
+        public const string UnauthorizedAssessmentAccess = "UnauthorizedAssessmentAccess";
+        public const string AssessmentAlreadyResponded = "AssessmentAlreadyResponded";
+        public const string AssessmentNotActive = "AssessmentNotActive";
         public const string SessionCleanupAuditNote = "SessionCleanupAuditNote"; // MSG-AUDIT-008
         public const string RoleBasedTimeoutAppliedAuditNote = "RoleBasedTimeoutAppliedAuditNote"; // MSG-AUDIT-009
         public const string RememberMeSessionCreatedAuditNote = "RememberMeSessionCreatedAuditNote"; // MSG-AUDIT-010
@@ -560,6 +608,128 @@
 
         // Role List Messages
         public const string NotFoundRoles = "NotFoundRoles";
+
+        // Assessment Status Localization Keys
+        public const string AssessmentStatusDraft = "AssessmentStatusDraft";
+        public const string AssessmentStatusWaitingForApproval = "AssessmentStatusWaitingForApproval";
+        public const string AssessmentStatusApproved = "AssessmentStatusApproved";
+        public const string AssessmentStatusRejected = "AssessmentStatusRejected";
+        public const string AssessmentStatusActive = "AssessmentStatusActive";
+        public const string AssessmentStatusCompleted = "AssessmentStatusCompleted";
+
+        // Assessment Type Localization Keys
+        public const string AssessmentTypeQuestionnaire = "AssessmentTypeQuestionnaire";
+        public const string AssessmentTypeAttachment = "AssessmentTypeAttachment";
+
+        // Question Type Localization Keys
+        public const string QuestionTypeSingleChoice = "QuestionTypeSingleChoice";
+        public const string QuestionTypeText = "QuestionTypeText";
+
+        // Assessment Validation Messages
+        public const string AssessmentTitleRequired = "AssessmentTitleRequired";
+        public const string AssessmentTypeRequired = "AssessmentTypeRequired";
+        public const string AtLeastOneQuestionRequired = "AtLeastOneQuestionRequired";
+        public const string AttachmentRequired = "AttachmentRequired";
+        public const string RejectionReasonRequired = "RejectionReasonRequired";
+        public const string AllRequiredQuestionsRequired = "AllRequiredQuestionsRequired";
+        public const string QuestionTextRequired = "QuestionTextRequired";
+        public const string QuestionOptionsRequired = "QuestionOptionsRequired";
+
+        // Assessment Success Messages
+        public const string AssessmentSubmittedForApproval = "AssessmentSubmittedForApproval";
+        public const string AssessmentSavedAsDraft = "AssessmentSavedAsDraft";
+        public const string AssessmentApproved = "AssessmentApproved";
+        public const string AssessmentRejected = "AssessmentRejected";
+        public const string AssessmentDistributed = "AssessmentDistributed";
+        public const string ResponseSubmittedSuccessfully = "ResponseSubmittedSuccessfully";
+
+        // Assessment Notification Messages
+        public const string NewAssessmentWaitingApproval = "NewAssessmentWaitingApproval";
+        public const string AssessmentApprovedNotification = "AssessmentApprovedNotification";
+        public const string AssessmentRejectedNotification = "AssessmentRejectedNotification";
+        public const string NewAssessmentReadyForResponse = "NewAssessmentReadyForResponse";
+        public const string AssessmentDistributionConfirmation = "AssessmentDistributionConfirmation";
+
+        // Assessment Error Messages
+        public const string InvalidStatusTransition = "InvalidStatusTransition";
+        public const string AssessmentNotFound = "AssessmentNotFound";
+        public const string UnauthorizedAssessmentAccess = "UnauthorizedAssessmentAccess";
+        public const string AssessmentAlreadyResponded = "AssessmentAlreadyResponded";
+        public const string AssessmentNotActive = "AssessmentNotActive";
+
+        // Additional Assessment Validation Messages
+        public const string AssessmentTitleMaxLength = "AssessmentTitleMaxLength";
+        public const string AssessmentWaitingTooLong = "AssessmentWaitingTooLong";
+        public const string AssessmentReadyForDistribution = "AssessmentReadyForDistribution";
+        public const string AssessmentCannotBeModified = "AssessmentCannotBeModified";
+        public const string AssessmentResponsesReceived = "AssessmentResponsesReceived";
+        public const string AssessmentCompletionReady = "AssessmentCompletionReady";
+
+        // Assessment Action Keys
+        public const string AssessmentSubmitForApproval = "AssessmentSubmitForApproval";
+        public const string AssessmentApprove = "AssessmentApprove";
+        public const string AssessmentReject = "AssessmentReject";
+        public const string AssessmentDistribute = "AssessmentDistribute";
+        public const string AssessmentComplete = "AssessmentComplete";
+        public const string AssessmentEdit = "AssessmentEdit";
+        public const string AssessmentViewDetails = "AssessmentViewDetails";
+        public const string AssessmentDelete = "AssessmentDelete";
+        public const string AssessmentSave = "AssessmentSave";
+        public const string AssessmentRespond = "AssessmentRespond";
+
+        // Assessment Review Messages
+        public const string ReviewerInformationRequired = "ReviewerInformationRequired";
+        public const string ReviewDateRequired = "ReviewDateRequired";
+        public const string FundBoardMembersRequired = "FundBoardMembersRequired";
+
+        // Additional Validation Messages
+        public const string InvalidAttachmentId = "InvalidAttachmentId";
+        public const string QuestionsNotAllowedForAttachment = "QuestionsNotAllowedForAttachment";
+        public const string QuestionDisplayOrdersUnique = "QuestionDisplayOrdersUnique";
+
+        // Question Validation Messages
+        public const string QuestionTextMaxLength = "QuestionTextMaxLength";
+        public const string QuestionTypeRequired = "QuestionTypeRequired";
+        public const string QuestionDisplayOrderRequired = "QuestionDisplayOrderRequired";
+        public const string QuestionOptionsMinimumTwo = "QuestionOptionsMinimumTwo";
+        public const string QuestionOptionsNotAllowedForText = "QuestionOptionsNotAllowedForText";
+
+        // Assessment Notification Resource Keys
+        public const string AssessmentSubmittedForApprovalNotificationTitle = "AssessmentSubmittedForApprovalNotificationTitle";
+        public const string AssessmentSubmittedForApprovalNotificationBody = "AssessmentSubmittedForApprovalNotificationBody";
+        public const string AssessmentApprovedNotificationTitle = "AssessmentApprovedNotificationTitle";
+        public const string AssessmentApprovedNotificationBody = "AssessmentApprovedNotificationBody";
+        public const string AssessmentRejectedNotificationTitle = "AssessmentRejectedNotificationTitle";
+        public const string AssessmentRejectedNotificationBody = "AssessmentRejectedNotificationBody";
+        public const string AssessmentDistributedNotificationTitle = "AssessmentDistributedNotificationTitle";
+        public const string AssessmentDistributedNotificationBody = "AssessmentDistributedNotificationBody";
+        public const string AssessmentCompletedNotificationTitle = "AssessmentCompletedNotificationTitle";
+        public const string AssessmentCompletedNotificationBody = "AssessmentCompletedNotificationBody";
+
+        // Assessment State Transition Messages
+        public const string AssessmentStatusTransitionMessage = "AssessmentStatusTransitionMessage";
+
+        // Assessment State Information Messages
+        public const string AssessmentPendingResponsesInfo = "AssessmentPendingResponsesInfo";
+        public const string AssessmentAllResponsesReceivedInfo = "AssessmentAllResponsesReceivedInfo";
+        public const string AssessmentNoResponsesWarning = "AssessmentNoResponsesWarning";
+        public const string AssessmentCompletionStatistics = "AssessmentCompletionStatistics";
+        public const string AssessmentNoResponsesReceived = "AssessmentNoResponsesReceived";
+        public const string AssessmentNoResponsesExist = "AssessmentNoResponsesExist";
+
+        // Assessment Action Keys (Additional)
+        public const string AssessmentViewRejectionReason = "AssessmentViewRejectionReason";
+        public const string AssessmentResubmit = "AssessmentResubmit";
+        public const string AssessmentViewResponses = "AssessmentViewResponses";
+        public const string AssessmentViewResults = "AssessmentViewResults";
+        public const string AssessmentCompleteAssessment = "AssessmentCompleteAssessment";
+        public const string AssessmentExportResults = "AssessmentExportResults";
+        public const string AssessmentExportData = "AssessmentExportData";
+        public const string AssessmentArchive = "AssessmentArchive";
+
+        // Question Type Resource Keys
+        public const string QuestionTypeSingleChoice = "QuestionTypeSingleChoice";
+        public const string QuestionTypeText = "QuestionTypeText";
 
     }
 }

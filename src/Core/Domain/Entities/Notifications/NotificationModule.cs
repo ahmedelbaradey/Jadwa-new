@@ -15,5 +15,6 @@ namespace Domain.Entities.Notifications
         Documents = 5,
         Meetings = 6,
         Session = 7,
+        Assessments = 8,
     }
 }

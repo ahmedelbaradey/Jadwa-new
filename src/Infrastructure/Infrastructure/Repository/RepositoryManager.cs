@@ -8,12 +8,14 @@ using Abstraction.Contracts.Repository.Fund;
 using Abstraction.Contracts.Repository.Products;
 using Abstraction.Contracts.Repository.Resolution;
 using Abstraction.Contract.Repository.Meeting;
+using Abstraction.Contract.Repository.AssessmentManagement;
 using Domain.Entities.ResolutionManagement;
 using Infrastructure.Data;
 using Infrastructure.Repository.Fund;
 using Infrastructure.Repository.Notifications;
 using Infrastructure.Repository.Resolution;
 using Infrastructure.Repository.Meeting;
+using Infrastructure.Repository.AssessmentManagement;
 using Microsoft.Extensions.Localization;
 using Repository.Catalog;
 using Resources;
@@ -47,6 +49,13 @@ namespace Infrastructure.Repository
         private readonly Lazy<IMeetingTimeProposalRepository> _iMeetingTimeProposalRepository;
         private readonly Lazy<IMeetingTimeVoteRepository> _iMeetingTimeVoteRepository;
         private readonly Lazy<IMeetingStatusHistoryRepository> _iMeetingStatusHistoryRepository;
+        
+        // Assessment Management
+        private readonly Lazy<IAssessmentRepository> _iAssessmentRepository;
+        private readonly Lazy<IAssessmentQuestionRepository> _iAssessmentQuestionRepository;
+        private readonly Lazy<IAssessmentResponseRepository> _iAssessmentResponseRepository;
+        private readonly Lazy<IAnswerRepository> _iAnswerRepository;
+
         private readonly INotificationLocalizationService _localizationService;
         private readonly ILoggerManager _logger; // Optional logger for logging errors and warnings
  
@@ -80,10 +89,18 @@ namespace Infrastructure.Repository
             _iResolutionVoteRepository = new Lazy<IResolutionVoteRepository>(() => new ResolutionVoteRepository(repositoryContext, currentUserService));
             _iResolutionStatusHistoryRepository = new Lazy<IResolutionStatusHistoryRepository>(() =>  new ResolutionStatusHistoryRepository(repositoryContext, currentUserService));
 
+
             // Meeting Management
             _iMeetingTimeProposalRepository = new Lazy<IMeetingTimeProposalRepository>(() => new MeetingTimeProposalRepository(repositoryContext, currentUserService));
             _iMeetingTimeVoteRepository = new Lazy<IMeetingTimeVoteRepository>(() => new MeetingTimeVoteRepository(repositoryContext, currentUserService));
             _iMeetingStatusHistoryRepository = new Lazy<IMeetingStatusHistoryRepository>(() => new MeetingStatusHistoryRepository(repositoryContext, currentUserService));
+
+            // Assessment Management
+            _iAssessmentRepository = new Lazy<IAssessmentRepository>(() => new AssessmentRepository(repositoryContext, currentUserService));
+            _iAssessmentQuestionRepository = new Lazy<IAssessmentQuestionRepository>(() => new AssessmentQuestionRepository(repositoryContext, currentUserService));
+            _iAssessmentResponseRepository = new Lazy<IAssessmentResponseRepository>(() => new AssessmentResponseRepository(repositoryContext, currentUserService));
+            _iAnswerRepository = new Lazy<IAnswerRepository>(() => new AnswerRepository(repositoryContext, currentUserService));
+
         }
 
         public ICategoryRepository Categories => _iCategpryRepository.Value;
@@ -107,8 +124,16 @@ namespace Infrastructure.Repository
         public IResolutionVoteRepository ResolutionVotes => _iResolutionVoteRepository.Value;
         public IResolutionStatusHistoryRepository ResolutionStatusHistory => _iResolutionStatusHistoryRepository.Value;
 
+
         public IMeetingTimeProposalRepository MeetingTimeProposals => _iMeetingTimeProposalRepository.Value;
         public IMeetingTimeVoteRepository MeetingTimeVotes => _iMeetingTimeVoteRepository.Value;
         public IMeetingStatusHistoryRepository MeetingStatusHistory => _iMeetingStatusHistoryRepository.Value;
+
+        // Assessment Management
+        public IAssessmentRepository Assessments => _iAssessmentRepository.Value;
+        public IAssessmentQuestionRepository AssessmentQuestions => _iAssessmentQuestionRepository.Value;
+        public IAssessmentResponseRepository AssessmentResponses => _iAssessmentResponseRepository.Value;
+        public IAnswerRepository Answers => _iAnswerRepository.Value;
+
     }
 }

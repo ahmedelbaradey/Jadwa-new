@@ -30,8 +30,18 @@ namespace Domain.Entities.Notifications
         SessionActivityReminder = 20,
         SessionExpiredReminder = 21,
 
+ 
         // Meeting Management Notifications
         MeetingTimeProposalCreated = 22, // MSG-MTV-NOT-01 - New meeting time proposal created
         MeetingTimeVotingCompleted = 23  // MSG-VMT-NOT-01 - Meeting time voting completed
+ 
+        // Assessment Notifications
+        AssessmentSubmittedForApproval = 22, // MSG002 - Assessment submitted for approval notification
+        AssessmentApproved = 23, // MSG002 - Assessment approved notification
+        AssessmentRejected = 24, // MSG004 - Assessment rejected notification
+        AssessmentDistributed = 25, // MSG002 - Assessment distributed to board members notification
+        AssessmentResponseSubmitted = 26, // MSG002 - Assessment response submitted notification
+        AssessmentCompleted = 27 // MSG002 - Assessment completed notification
+ 
     }
 }

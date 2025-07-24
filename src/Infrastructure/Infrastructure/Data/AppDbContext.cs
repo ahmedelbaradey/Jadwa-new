@@ -7,6 +7,8 @@ using Domain.Entities.FundManagement;
 using Domain.Entities.Notifications;
 using Domain.Entities.ResolutionManagement;
 using Domain.Entities.MeetingManagement;
+using Domain.Entities.AssessmentManagement;
+ 
 
 namespace Infrastructure.Data
 {
@@ -47,6 +49,13 @@ namespace Infrastructure.Data
         public DbSet<ProposedDate> ProposedDates { get; set; }
         public DbSet<MeetingTimeVote> MeetingTimeVotes { get; set; }
         public DbSet<MeetingStatusHistory> MeetingStatusHistories { get; set; }
+
+        // Assessment Management
+        public DbSet<Assessment> Assessments { get; set; }
+        public DbSet<AssessmentQuestion> AssessmentQuestions { get; set; }
+        public DbSet<AssessmentResponse> AssessmentResponses { get; set; }
+        public DbSet<Answer> Answers { get; set; }
+        public DbSet<AssessmentStatusHistory> AssessmentStatusHistories { get; set; }
 
         #endregion
 
