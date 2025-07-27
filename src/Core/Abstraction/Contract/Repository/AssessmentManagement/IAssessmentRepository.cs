@@ -43,6 +43,14 @@ namespace Abstraction.Contract.Repository.AssessmentManagement
         Task<Assessment?> GetAssessmentWithDetailsAsync(int assessmentId, bool trackChanges = false);
 
         /// <summary>
+        /// Gets assessment with questions only
+        /// </summary>
+        /// <param name="assessmentId">Assessment ID</param>
+        /// <param name="trackChanges">Whether to track changes</param>
+        /// <returns>Assessment with questions</returns>
+        Task<Assessment?> GetAssessmentWithQuestionsAsync(int assessmentId, bool trackChanges = false);
+
+        /// <summary>
         /// Gets assessments by creator user ID
         /// </summary>
         /// <param name="createdBy">Creator user ID</param>
