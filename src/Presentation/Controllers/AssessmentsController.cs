@@ -1,4 +1,7 @@
 using Application.Features.Assessments.Commands.AddAssessment;
+using Application.Features.Assessments.Commands.DistributeAssessment;
+using Application.Features.Assessments.Commands.SubmitAssessmentResponse;
+using Application.Features.Assessments.Queries.GetAssessmentResults;
 using Application.Features.Assessments.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -110,56 +113,56 @@ namespace Presentation.Controllers
 
         /// <summary>
         /// Distributes an assessment to board members
-        /// Placeholder for User Story 3: Distribute Assessment
+        /// Implements User Story 3: Distribute Assessment
         /// </summary>
         /// <param name="id">Assessment ID</param>
         /// <returns>Distribution result</returns>
         [HttpPost("{id}/distribute")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(DistributeAssessmentResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> DistributeAssessment(int id)
         {
-            // TODO: Implement DistributeAssessmentCommand and handler
-            // This will be implemented in User Story 3
-            return Ok(new { Message = "Distribute assessment endpoint - to be implemented" });
+            var command = new DistributeAssessmentCommand { AssessmentId = id };
+            var result = await Mediator.Send(command);
+            return NewResult(result);
         }
 
         /// <summary>
         /// Submits response to an assessment
-        /// Placeholder for User Story 4: Respond to Assessment
+        /// Implements User Story 4: Respond to Assessment
         /// </summary>
         /// <param name="id">Assessment ID</param>
-        /// <param name="responseDto">Response data</param>
+        /// <param name="command">Response data</param>
         /// <returns>Submission result</returns>
         [HttpPost("{id}/respond")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(SubmitAssessmentResponseResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> RespondToAssessment(int id, [FromBody] object responseDto)
+        public async Task<IActionResult> RespondToAssessment(int id, [FromBody] SubmitAssessmentResponseCommand command)
         {
-            // TODO: Implement SubmitAssessmentResponseCommand and handler
-            // This will be implemented in User Story 4
-            return Ok(new { Message = "Respond to assessment endpoint - to be implemented" });
+            command.AssessmentId = id;
+            var result = await Mediator.Send(command);
+            return NewResult(result);
         }
 
         /// <summary>
         /// Gets compiled assessment results
-        /// Placeholder for User Story 5: View Compiled Assessment Results
+        /// Implements User Story 5: View Compiled Assessment Results
         /// </summary>
         /// <param name="id">Assessment ID</param>
         /// <returns>Assessment results</returns>
         [HttpGet("{id}/results")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(GetAssessmentResultsResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public async Task<IActionResult> GetAssessmentResults(int id)
         {
-            // TODO: Implement GetAssessmentResultsQuery and handler
-            // This will be implemented in User Story 5
-            return Ok(new { Message = "Get assessment results endpoint - to be implemented" });
+            var query = new GetAssessmentResultsQuery { AssessmentId = id };
+            var result = await Mediator.Send(query);
+            return NewResult(result);
         }
 
         /// <summary>
