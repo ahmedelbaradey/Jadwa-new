@@ -90,6 +90,20 @@ namespace Infrastructure.Repository.AssessmentManagement
                 .Include(a => a.Responses)
                     .ThenInclude(r => r.Answers)
                         .ThenInclude(ans => ans.Question)
+                .Include(a => a.Attachment)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets assessment with questions only
+        /// </summary>
+        /// <param name="assessmentId">Assessment ID</param>
+        /// <param name="trackChanges">Whether to track changes</param>
+        /// <returns>Assessment with questions</returns>
+        public async Task<Assessment?> GetAssessmentWithQuestionsAsync(int assessmentId, bool trackChanges = false)
+        {
+            return await GetByCondition<Assessment>(a => a.Id == assessmentId, trackChanges)
+                .Include(a => a.Questions.OrderBy(q => q.DisplayOrder))
                 .FirstOrDefaultAsync();
         }
 
