@@ -244,3 +244,15 @@ This feature operates on the existing **Document** entity. No new data entities 
 | MSG-005 | Document has been deleted successfully. | تم حذف الوثيقة بنجاح. | Success | In-App Notification |
 | MSG-006 | Are you sure you want to permanently delete this document? This action cannot be undone. | هل أنت متأكد من رغبتك في حذف هذه الوثيقة بشكل دائم؟ لا يمكن التراجع عن هذا الإجراء. | Confirmation | In-App Prompt |
 | MSG-010 | Deletion failed. The document could not be removed. Please try again. | فشل الحذف. لم يتم حذف الوثيقة. يرجى المحاولة مرة أخرى. | Error | In-App Alert |
+
+#### **9. Document Notifications Table**
+
+| Message Code | Message (English)                                                                                  | Message (Arabic)                                                                                     | Message Type  | Communication Method         |
+|--------------|----------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------|---------------|------------------------------|
+| MSG-004      | Document uploaded successfully.                                                                    | تم رفع الوثيقة بنجاح.                                                                                 | Success       | In-App Message               |
+| MSG-005      | Document has been deleted successfully.                                                            | تم حذف الوثيقة بنجاح.                                                                                 | Success       | In-App Message               |
+| MSG-006      | Are you sure you want to permanently delete this document? This action cannot be undone.          | هل أنت متأكد من رغبتك في حذف هذه الوثيقة بشكل دائم؟ لا يمكن التراجع عن هذا الإجراء.                  | Confirmation  | In-App Prompt                |
+| MSG-011      | Document details updated successfully.                                                             | تم تحديث تفاصيل الوثيقة بنجاح.                                                                       | Success       | In-App Message               |
+| MSG-N-01     | [ActorName] added the document "[TargetEntityName]" to the [FundName] fund.                       | قام [ActorName] بإضافة الوثيقة "[TargetEntityName]" إلى صندوق [FundName].                          | Notification  | In-App Notification Center   |
+| MSG-N-02     | [ActorName] updated the details for the document "[TargetEntityName]" in the [FundName] fund.     | قام [ActorName] بتحديث تفاصيل الوثيقة "[TargetEntityName]" في صندوق [FundName].                   | Notification  | In-App Notification Center   |
+| MSG-N-03     | [ActorName] deleted the document "[TargetEntityName]" from the [FundName] fund.                   | قام [ActorName] بحذف الوثيقة "[TargetEntityName]" من صندوق [FundName].                            | Notification  | In-App Notification Center   |
